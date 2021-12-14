@@ -1,6 +1,14 @@
 # JDBC, THE way to Database in Java.
+### Run the source code in IntelliJ
+
+To run the source code, you want to add a configuration.   
+In this configuration, you will run the command "exec:java" via maven. You also should add a maven goal to "run before launch" with argument
+"install" so it will compile your source code before running it.  
+This whole project is using maven. If you need to edit maven configuration, please modify the pom.xml profect file
+attached.
 
 ### Database Setup
+
 Here we is the procedure to follow in order to install the database. All commands are meant to be run in bash.
 
 <ol>
