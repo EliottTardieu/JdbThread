@@ -40,7 +40,7 @@ public class App {
         } else {
             Client client = new Client();
             client.setName(clientName);
-            client.setFullAddress(clientAddress);
+            client.setAddress(clientAddress);
             clientId = client.getId();
         }
         Order order = new Order();
