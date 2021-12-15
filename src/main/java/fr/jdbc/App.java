@@ -8,9 +8,7 @@ import fr.jdbc.models.Product;
 import fr.jdbc.utils.Logger;
 import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.*;
 
 public class App {
 
@@ -80,9 +78,18 @@ public class App {
             this.orderDAO.save(order);
         }
     }
+
     public static App getInstance(){
         if(instance == null) return new App();
         return instance;
+    }
+
+    public List<Object> twoDArrayToList(Object[][] array) {
+        List<Object> list = new ArrayList<>();
+        for (Object obj : array) {
+            list.addAll(Arrays.asList(array));
+        }
+        return list;
     }
 
 }

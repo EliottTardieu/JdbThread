@@ -1,9 +1,11 @@
 package fr.jdbc.models;
 
+import dnl.utils.text.table.TextTable;
 import fr.jdbc.App;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Client extends Model {
@@ -32,5 +34,17 @@ public class Client extends Model {
         this.setForename(string(data.get("prenom")));
         this.setDiscount(integer(data.get("reduction")));
         this.setAddress(App.getInstance().getFullAddressDAO().findById(integer(data.get("adresse"))));
+    }
+
+    public ArrayList<ArrayList<Object>> display(ArrayList<ArrayList<Object>> data) {
+        ArrayList<Object> toAdd = new ArrayList<>();
+        toAdd.add(this.getId());
+        toAdd.add(this.getName());
+        toAdd.add(this.getForename());
+        toAdd.add(this.getDiscount());
+        toAdd.add(this.getAddress().getAddress());
+        toAdd.add(this.getAddress().getCity());
+        data.add(toAdd);
+        return data;
     }
 }
