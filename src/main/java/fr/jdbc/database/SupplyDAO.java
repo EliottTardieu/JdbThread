@@ -30,7 +30,18 @@ public class SupplyDAO extends DAO<Supply> {
      */
     @Override
     protected HashMap<String, Object> getInsertMap(Supply object) {
-        return null;
+        HashMap<String, Object> insertMap = new HashMap<>();
+        String concatProds = "";
+        for(int i = 0; i < object.getProducts().size(); i++) {
+            concatProds = concatProds.concat(String.valueOf(object.getProducts().get(i).getId()));
+            if(i != object.getProducts().size()-1){
+                concatProds = concatProds.concat(",");
+            }
+        }
+        insertMap.put("id_produits", concatProds);
+        insertMap.put("prix", object.getPrice());
+        insertMap.put("id_fournisseur", object.getSupplier().getId());
+        return insertMap;
     }
 
     /**
@@ -43,6 +54,17 @@ public class SupplyDAO extends DAO<Supply> {
      */
     @Override
     protected HashMap<String, Object> getUpdateMap(Supply object) {
-        return null;
+        HashMap<String, Object> updateMap = new HashMap<>();
+        String concatProds = "";
+        for(int i = 0; i < object.getProducts().size(); i++) {
+            concatProds = concatProds.concat(String.valueOf(object.getProducts().get(i).getId()));
+            if(i != object.getProducts().size()-1){
+                concatProds = concatProds.concat(",");
+            }
+        }
+        updateMap.put("id_produits", concatProds);
+        updateMap.put("prix", object.getPrice());
+        updateMap.put("id_fournisseur", object.getSupplier().getId());
+        return updateMap;
     }
 }

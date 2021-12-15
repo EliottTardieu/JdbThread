@@ -14,7 +14,7 @@ public class Order extends Model {
     @Getter @Setter
     private LinkedList<Integer> quantityProduct = new LinkedList<>();
     @Getter @Setter
-    private int price;
+    private float price;
     @Getter @Setter
     private Client client;
 
@@ -36,5 +36,6 @@ public class Order extends Model {
             this.quantityProduct.add(Integer.parseInt(quantity));
         }
         this.setClient(App.getInstance().getClientDAO().findById(integer(data.get("id"))));
+        this.setPrice(floatNumber(data.get("price")));
     }
 }

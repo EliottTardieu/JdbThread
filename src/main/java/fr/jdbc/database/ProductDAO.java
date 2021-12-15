@@ -30,7 +30,13 @@ public class ProductDAO extends DAO<Product> {
      */
     @Override
     protected HashMap<String, Object> getInsertMap(Product object) {
-        return null;
+        HashMap<String, Object> insertMap = new HashMap<>();
+        insertMap.put("nom", object.getName());
+        insertMap.put("categorie", object.getCategory());
+        insertMap.put("espece", object.getSpecies());
+        insertMap.put("prix_unitaire", object.getUnitPrice());
+        insertMap.put("quantite_disponible", object.getAvailableQuantity());
+        return insertMap;
     }
 
     /**
@@ -43,6 +49,11 @@ public class ProductDAO extends DAO<Product> {
      */
     @Override
     protected HashMap<String, Object> getUpdateMap(Product object) {
-        return null;
-    }
+        HashMap<String, Object> updateMap = new HashMap<>();
+        updateMap.put("nom", object.getName());
+        updateMap.put("categorie", object.getCategory());
+        updateMap.put("espece", object.getSpecies());
+        updateMap.put("prix_unitaire", object.getUnitPrice());
+        updateMap.put("quantite_disponible", object.getAvailableQuantity());
+        return updateMap;        }
 }

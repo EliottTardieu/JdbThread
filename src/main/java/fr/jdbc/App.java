@@ -14,6 +14,7 @@ import java.util.LinkedList;
 
 public class App {
 
+    private static final float TVA = 1.15f;
     private static App instance;
 
     @Getter
@@ -35,9 +36,10 @@ public class App {
         if (products.size() != quantities.size()) {
             Logger.severe("Unable to handle product with no quantity.");
         } else {
+            //TODO Pour chaque produit remove en DB la qt associée.
             Client client;
             FullAddress clientFullAddress;
-            int price = 0;
+            float price = 0;
 
             HashMap<String, Object> criteriasAdd = new HashMap<>();
             criteriasAdd.put("adresse", clientAddress);
@@ -68,6 +70,7 @@ public class App {
             for (int i = 0; i < products.size(); i++) {
                 price += products.get(i).getUnitPrice() * quantities.get(i);
             }
+            price = price*App.TVA-client.getDiscount();
 
             Order order = new Order();
             order.setProducts(products);

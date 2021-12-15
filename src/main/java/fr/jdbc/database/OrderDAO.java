@@ -1,6 +1,7 @@
 package fr.jdbc.database;
 
 import fr.jdbc.models.Order;
+import fr.jdbc.models.Product;
 
 import java.util.HashMap;
 
@@ -31,10 +32,24 @@ public class OrderDAO extends DAO<Order> {
     @Override
     protected HashMap<String, Object> getInsertMap(Order object) {
         HashMap<String, Object> insertMap = new HashMap<>();
-        insertMap.put("id_produits", object);
-        insertMap.put("quantite_produits", object);
-        insertMap.put("prix", object);
-        insertMap.put("id_client", object);
+        String concatProds = "";
+        String concatQts = "";
+        for(Product product : object.getProducts()){
+            concatProds = concatProds.concat(String.valueOf(product.getId()));
+            if(product != object.getProducts().getLast()){
+                concatProds = concatProds.concat(",");
+            }
+        }
+        for(int quantities : object.getQuantityProduct()){
+            concatQts = concatQts.concat(String.valueOf(quantities));
+            if(quantities != object.getQuantityProduct().getLast()){
+                concatQts = concatQts.concat(",");
+            }
+        }
+        insertMap.put("id_produits", concatProds);
+        insertMap.put("quantite_produits", concatQts);
+        insertMap.put("prix", object.getPrice());
+        insertMap.put("id_client", object.getClient().getId());
         return insertMap;
     }
 
@@ -49,10 +64,24 @@ public class OrderDAO extends DAO<Order> {
     @Override
     protected HashMap<String, Object> getUpdateMap(Order object) {
         HashMap<String, Object> updateMap = new HashMap<>();
-        updateMap.put("id_produits", object);
-        updateMap.put("quantite_produits", object);
-        updateMap.put("prix", object);
-        updateMap.put("id_client", object);
+        String concatProds = "";
+        String concatQts = "";
+        for(Product product : object.getProducts()){
+            concatProds = concatProds.concat(String.valueOf(product.getId()));
+            if(product != object.getProducts().getLast()){
+                concatProds = concatProds.concat(",");
+            }
+        }
+        for(int quantities : object.getQuantityProduct()){
+            concatQts = concatQts.concat(String.valueOf(quantities));
+            if(quantities != object.getQuantityProduct().getLast()){
+                concatQts = concatQts.concat(",");
+            }
+        }
+        updateMap.put("id_produits", concatProds);
+        updateMap.put("quantite_produits", concatQts);
+        updateMap.put("prix", object.getPrice());
+        updateMap.put("id_client", object.getClient().getId());
         return updateMap;
     }
 }

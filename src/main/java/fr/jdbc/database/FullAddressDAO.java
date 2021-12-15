@@ -30,7 +30,10 @@ public class FullAddressDAO extends DAO<FullAddress> {
      */
     @Override
     protected HashMap<String, Object> getInsertMap(FullAddress object) {
-        return null;
+        HashMap<String, Object> insertMap = new HashMap<>();
+        insertMap.put("adresse", object.getAddress());
+        insertMap.put("ville", object.getCity());
+        return insertMap;
     }
 
     /**
@@ -43,6 +46,9 @@ public class FullAddressDAO extends DAO<FullAddress> {
      */
     @Override
     protected HashMap<String, Object> getUpdateMap(FullAddress object) {
-        return null;
+        HashMap<String, Object> updateMap = new HashMap<>();
+        updateMap.put("adresse", object.getAddress());
+        updateMap.put("ville", object.getCity());
+        return updateMap;
     }
 }

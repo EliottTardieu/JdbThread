@@ -31,7 +31,12 @@ public class ClientDAO extends DAO<Client> {
      */
     @Override
     protected HashMap<String, Object> getInsertMap(Client object) {
-        return null;
+        HashMap<String, Object> insertMap = new HashMap<>();
+        insertMap.put("nom", object.getName());
+        insertMap.put("prenom", object.getForename());
+        insertMap.put("reduction", object.getDiscount());
+        insertMap.put("adresse", object.getAddress().getId());
+        return insertMap;
     }
 
     /**
@@ -44,6 +49,11 @@ public class ClientDAO extends DAO<Client> {
      */
     @Override
     protected HashMap<String, Object> getUpdateMap(Client object) {
-        return null;
+        HashMap<String, Object> updateMap = new HashMap<>();
+        updateMap.put("nom", object.getName());
+        updateMap.put("prenom", object.getForename());
+        updateMap.put("reduction", object.getDiscount());
+        updateMap.put("adresse", object.getAddress().getId());
+        return updateMap;
     }
 }
