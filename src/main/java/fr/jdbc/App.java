@@ -5,6 +5,7 @@ import fr.jdbc.models.Client;
 import fr.jdbc.models.FullAddress;
 import fr.jdbc.models.Order;
 import fr.jdbc.models.Product;
+import fr.jdbc.utils.Logger;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -30,26 +31,52 @@ public class App {
 
     private App(){}
 
-    public void createOrder(LinkedList<Product> products, LinkedList<Integer> quantities, int price, String clientName, FullAddress clientAddress) {
-        int clientId;
-        HashMap<String, Object> criterias = new HashMap<>();
-        criterias.put("nom", clientName);
-        criterias.put("adresse", clientAddress.getId());
-        if(this.clientDAO.find(criterias).exist()) {
-            clientId = this.clientDAO.find(criterias).getId();
+    public void createOrder(LinkedList<Product> products, LinkedList<Integer> quantities, String clientName, String clientAddress, String clientCity) {
+        if (products.size() != quantities.size()) {
+            Logger.severe("Unable to handle product with no quantity.");
         } else {
-            Client client = new Client();
-            client.setName(clientName);
-            client.setAddress(clientAddress);
-            clientId = client.getId();
-        }
-        Order order = new Order();
-        order.setProducts(products);
-        order.setQuantityProduct(quantities);
-        order.setPrice(price);
-        order.setClient(this.clientDAO.findById(clientId));
-    }
+            Client client;
+            FullAddress clientFullAddress;
+            int price = 0;
 
+            HashMap<String, Object> criteriasAdd = new HashMap<>();
+            criteriasAdd.put("adresse", clientAddress);
+            criteriasAdd.put("ville", clientCity);
+
+            if (this.fullAddressDAO.find(criteriasAdd).exist()) {
+                clientFullAddress = this.fullAddressDAO.find(criteriasAdd);
+            } else {
+                clientFullAddress = new FullAddress();
+                clientFullAddress.setAddress(clientAddress);
+                clientFullAddress.setCity(clientCity);
+                this.fullAddressDAO.save(clientFullAddress);
+            }
+
+            HashMap<String, Object> criteriasCli = new HashMap<>();
+            criteriasCli.put("nom", clientName);
+            criteriasCli.put("adresse", clientFullAddress.getId());
+
+            if (this.clientDAO.find(criteriasCli).exist()) {
+                client = this.clientDAO.find(criteriasCli);
+            } else {
+                client = new Client();
+                client.setName(clientName);
+                client.setAddress(clientFullAddress);
+                this.clientDAO.save(client);
+            }
+
+            for (int i = 0; i < products.size(); i++) {
+                price += products.get(i).getUnitPrice() * quantities.get(i);
+            }
+
+            Order order = new Order();
+            order.setProducts(products);
+            order.setQuantityProduct(quantities);
+            order.setPrice(price);
+            order.setClient(client);
+            this.orderDAO.save(order);
+        }
+    }
     public static App getInstance(){
         if(instance == null) return new App();
         return instance;
