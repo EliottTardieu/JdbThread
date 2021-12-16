@@ -3,6 +3,7 @@ package fr.jdbc.models;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Product extends Model {
@@ -34,5 +35,17 @@ public class Product extends Model {
         this.setSpecies(string(data.get("espece")));
         this.setUnitPrice(integer(data.get("prix_unitaire")));
         this.setAvailableQuantity(integer(data.get("quantite_disponible")));
+    }
+
+    public ArrayList<ArrayList<Object>> display(ArrayList<ArrayList<Object>> data) {
+        ArrayList<Object> toAdd = new ArrayList<>();
+        toAdd.add(this.getId());
+        toAdd.add(this.getName());
+        toAdd.add(this.getCategory());
+        toAdd.add(this.getSpecies());
+        toAdd.add(this.getUnitPrice());
+        toAdd.add(this.getAvailableQuantity());
+        data.add(toAdd);
+        return data;
     }
 }

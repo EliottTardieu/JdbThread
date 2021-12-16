@@ -54,8 +54,11 @@ public class Order extends Model {
         return data;
     }
 
-    public ArrayList<ArrayList<Object>> displayContent(ArrayList<ArrayList<Object>> content) {
-        //TODO Faire l'affichage du contenu propre !
-        return null;
+    public ArrayList<ArrayList<Object>> displayContent(ArrayList<ArrayList<Object>> content, int numProduct) {
+        ArrayList<Object> toAdd = new ArrayList<>();
+        toAdd.add(this.getProducts().get(numProduct).getName());
+        toAdd.add(this.getQuantityProduct().get(numProduct));
+        content.add(toAdd);
+        return content;
     }
 }

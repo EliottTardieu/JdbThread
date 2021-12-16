@@ -24,7 +24,8 @@ public class Supplier extends Model {
     }
 
     public Supplier(HashMap<String, Object> data) {
-        super(data);
+        this.products = new ArrayList<>();
+        this.hydrate(data);
     }
 
     @Override
@@ -36,5 +37,17 @@ public class Supplier extends Model {
             this.products.add(App.getInstance().getProductDAO().findById(Integer.parseInt(id)));
         }
         this.setAddress(App.getInstance().getFullAddressDAO().findById(integer(data.get("adresse"))));
+    }
+
+    public ArrayList<ArrayList<Object>> display(ArrayList<ArrayList<Object>> data) {
+        ArrayList<Object> toAdd = new ArrayList<>();
+        toAdd.add(this.getId());
+        toAdd.add(this.getName());
+        toAdd.add(this.getForename());
+        toAdd.add(this.getAddress().getAddress());
+        toAdd.add(this.getAddress().getCity());
+        toAdd.add(this.getProducts());
+        data.add(toAdd);
+        return data;
     }
 }
