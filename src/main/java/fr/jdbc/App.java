@@ -84,12 +84,4 @@ public class App {
         return instance;
     }
 
-    public List<Object> twoDArrayToList(Object[][] array) {
-        List<Object> list = new ArrayList<>();
-        for (Object obj : array) {
-            list.addAll(Arrays.asList(array));
-        }
-        return list;
-    }
-
 }

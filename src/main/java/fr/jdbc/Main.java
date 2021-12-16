@@ -12,14 +12,15 @@ public class Main {
 
 
     public static void main(String[] args) {
-        String[] columnsClient = {"Id", "Nom", "Prénom", "Réduction", "Adresse", "Ville"};
+        /**String[] columnsClient = {"Id", "Nom", "Prénom", "Réduction", "Adresse", "Ville"};
         ArrayList<ArrayList<Object>> dataClient = new ArrayList<>();
         for (Client c : App.getInstance().getClientDAO().getAll()) {
             dataClient = c.display(dataClient);
         }
         Object[][] formalizedDataClient = dataClient.stream().map(u -> u.toArray(new Object[0])).toArray(Object[][]::new);
         TextTable clientTable = new TextTable(columnsClient, formalizedDataClient);
-        clientTable.printTable();
+        clientTable.printTable();*/
+        System.out.println(App.getInstance().getOrderDAO().getAll().get(0).getClient().getName());
 
         System.exit(0);
     }

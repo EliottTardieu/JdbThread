@@ -24,21 +24,24 @@ public class Order extends Model {
     }
 
     public Order(HashMap<String, Object> data) {
-        super(data);
+        this.products = new LinkedList<>();
+        this.quantityProduct = new LinkedList<>();
+        this.hydrate(data);
     }
 
     @Override
     protected void hydrate(HashMap<String, Object> data) {
         this.setId(integer(data.get("id")));
         for (String id : string(data.get("id_produits")).split(",")) {
-            this.products.add(App.getInstance().getProductDAO().findById(Integer.parseInt(id)));
+            this.products.addLast(App.getInstance().getProductDAO().findById(Integer.parseInt(id)));
         }
         for (String quantity : string(data.get("quantite_produits")).split(",")) {
-            this.quantityProduct.add(Integer.parseInt(quantity));
+            this.quantityProduct.addLast(Integer.parseInt(quantity));
         }
-        this.setClient(App.getInstance().getClientDAO().findById(integer(data.get("id"))));
+        this.setClient(App.getInstance().getClientDAO().findById(integer(data.get("id_client"))));
         this.setPrice(floatNumber(data.get("price")));
     }
+
 
     public ArrayList<ArrayList<Object>> display(ArrayList<ArrayList<Object>> data) {
         ArrayList<Object> toAdd = new ArrayList<>();
