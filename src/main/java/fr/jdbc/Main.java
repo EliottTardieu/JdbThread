@@ -37,7 +37,7 @@ public class Main {
         supplierTable.printTable();
         */
 
-         
+
         /* It's working !
         String[] columnsOrderContent = {"Nom Produit", "Quantité"};
         ArrayList<ArrayList<Object>> dataOrderContent = new ArrayList<>();
