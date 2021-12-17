@@ -33,4 +33,22 @@ public class Supply extends Model {
         this.setPrice(integer(data.get("prix")));
         this.setSupplier(App.getInstance().getSupplierDAO().findById(integer(data.get("id_fournisseur"))));
     }
+
+    public ArrayList<ArrayList<Object>> display(ArrayList<ArrayList<Object>> data) {
+        ArrayList<Object> toAdd = new ArrayList<>();
+        toAdd.add(this.getId());
+        toAdd.add(this.getSupplier().getName());
+        toAdd.add(this.getSupplier().getForename());
+        toAdd.add(this.getPrice());
+        data.add(toAdd);
+        return data;
+    }
+
+    public ArrayList<ArrayList<Object>> displayContent(ArrayList<ArrayList<Object>> content, int numProduct) {
+        ArrayList<Object> toAdd = new ArrayList<>();
+        toAdd.add(this.getProducts().get(numProduct).getName());
+        toAdd.add(this.getProducts().get(numProduct).getCategory());
+        content.add(toAdd);
+        return content;
+    }
 }

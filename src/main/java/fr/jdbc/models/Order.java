@@ -39,7 +39,7 @@ public class Order extends Model {
             this.quantityProduct.addLast(Integer.parseInt(quantity));
         }
         this.setClient(App.getInstance().getClientDAO().findById(integer(data.get("id_client"))));
-        this.setPrice(floatNumber(data.get("price")));
+        this.setPrice(floatNumber(data.get("prix")));
     }
 
 
@@ -58,6 +58,7 @@ public class Order extends Model {
         ArrayList<Object> toAdd = new ArrayList<>();
         toAdd.add(this.getProducts().get(numProduct).getName());
         toAdd.add(this.getQuantityProduct().get(numProduct));
+        toAdd.add(this.getProducts().get(numProduct).getUnitPrice());
         content.add(toAdd);
         return content;
     }

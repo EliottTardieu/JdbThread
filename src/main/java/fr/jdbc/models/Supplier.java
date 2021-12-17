@@ -50,4 +50,13 @@ public class Supplier extends Model {
         data.add(toAdd);
         return data;
     }
+
+    public ArrayList<ArrayList<Object>> displayContent(ArrayList<ArrayList<Object>> content, int numProduct) {
+        ArrayList<Object> toAdd = new ArrayList<>();
+        toAdd.add(this.getProducts().get(numProduct).getName());
+        toAdd.add(this.getProducts().get(numProduct).getCategory());
+        toAdd.add(this.getProducts().get(numProduct).getUnitPrice());
+        content.add(toAdd);
+        return content;
+    }
 }
