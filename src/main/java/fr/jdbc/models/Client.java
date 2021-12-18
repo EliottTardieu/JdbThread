@@ -2,11 +2,13 @@ package fr.jdbc.models;
 
 import dnl.utils.text.table.TextTable;
 import fr.jdbc.App;
+import fr.jdbc.utils.Logger;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Scanner;
 
 public class Client extends Model {
 
@@ -34,6 +36,49 @@ public class Client extends Model {
         this.setForename(string(data.get("prenom")));
         this.setDiscount(integer(data.get("reduction")));
         this.setAddress(App.getInstance().getFullAddressDAO().findById(integer(data.get("adresse"))));
+    }
+
+    /**
+     *  Methode pour créer un client initialisé à partir de saisie dans un terminal.
+     * @return Client initialisée
+     */
+    public Client initialize(){
+        Scanner scanner = new Scanner(System.in);
+        String clientAddress;
+        String clientCity;
+
+        // Adresse du client
+        System.out.println("Entrez l'adresse du client: ");
+        clientAddress = scanner.nextLine();
+        System.out.println("Entrez la ville du client: ");
+        clientCity = scanner.nextLine();
+        HashMap<String, Object> criteriasAdd = new HashMap<>();
+        criteriasAdd.put("adresse", clientAddress);
+        criteriasAdd.put("ville", clientCity);
+        if (App.getInstance().getFullAddressDAO().find(criteriasAdd) != null) {
+            this.address = App.getInstance().getFullAddressDAO().find(criteriasAdd);
+            Logger.fine("Client address found.");
+        } else {
+            this.address = new FullAddress();
+            this.address.setAddress(clientAddress);
+            this.address.setCity(clientCity);
+            App.getInstance().getFullAddressDAO().save(this.address);
+            Logger.warning("Client address unknown, added to database.");
+        }
+
+        // Nom et prénom
+        System.out.println("Entrez le nom: ");
+        this.name = scanner.nextLine();
+        System.out.println("Entrez le prénom: ");
+        this.forename = scanner.nextLine();
+
+        // Reduction
+        System.out.println("Entrez le montant de la réduction: ");
+        this.discount = scanner.nextInt();
+        scanner.nextLine();
+
+        App.getInstance().getClientDAO().save(this);
+        return this;
     }
 
     /**

@@ -1,12 +1,14 @@
 package fr.jdbc.models;
 
 import fr.jdbc.App;
+import fr.jdbc.utils.Logger;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Scanner;
 
 public class Supplier extends Model {
 
@@ -37,6 +39,67 @@ public class Supplier extends Model {
             this.products.add(App.getInstance().getProductDAO().findById(Integer.parseInt(id)));
         }
         this.setAddress(App.getInstance().getFullAddressDAO().findById(integer(data.get("adresse"))));
+    }
+
+    /**
+     *  Methode pour créer un fournisseur initialisé à partir de saisie dans un terminal.
+     * @return Fournisseur initialisée
+     */
+    public Supplier initialize(){
+        Scanner scanner = new Scanner(System.in);
+        String choice;
+        String supplierAddress;
+        String supplierCity;
+
+        // Adresse du fournisseur
+        System.out.println("Entrez l'adresse du fournisseur: ");
+        supplierAddress = scanner.nextLine();
+        System.out.println("Entrez la ville du fournisseur: ");
+        supplierCity = scanner.nextLine();
+        HashMap<String, Object> criteriasAdd = new HashMap<>();
+        criteriasAdd.put("adresse", supplierAddress);
+        criteriasAdd.put("ville", supplierCity);
+        if (App.getInstance().getFullAddressDAO().find(criteriasAdd) != null) {
+            this.address = App.getInstance().getFullAddressDAO().find(criteriasAdd);
+            Logger.fine("Supplier address found.");
+        } else {
+            this.address = new FullAddress();
+            this.address.setAddress(supplierAddress);
+            this.address.setCity(supplierCity);
+            App.getInstance().getFullAddressDAO().save(this.address);
+            Logger.warning("Supplier address unknown, added to database.");
+        }
+
+        // Nom et prénom
+        System.out.println("Entrez le nom: ");
+        this.name = scanner.nextLine();
+        System.out.println("Entrez le prénom: ");
+        this.forename = scanner.nextLine();
+
+        // Produits
+        boolean stop = false;
+        System.out.println("Si vous avez fini, entrez \"stop\".");
+        while(!stop) {
+            App.getInstance().displayAllProducts();
+            System.out.println("Entrez le nom du produit à ajouter: ");
+            choice = scanner.nextLine();
+            if(choice.equalsIgnoreCase("stop")) {
+                stop = true;
+            } else {
+                HashMap<String, Object> criteriasProd = new HashMap<>();
+                criteriasProd.put("nom", choice);
+                if (App.getInstance().getProductDAO().find(criteriasProd) != null) {
+                    Product product = App.getInstance().getProductDAO().find(criteriasProd);
+                    this.products.add(product);
+                } else {
+                    System.out.println("Wrong product name, please select a valid product.");
+                    Logger.warning("Wrong product name in input.");
+                }
+            }
+        }
+
+        App.getInstance().getSupplierDAO().save(this);
+        return this;
     }
 
     /**

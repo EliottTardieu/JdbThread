@@ -77,7 +77,6 @@ public class App {
         } else if (answerSupplier.equalsIgnoreCase("non")) {
             supplierTable.printTable();
         }
-        scanner.close();
         System.out.println("");
     }
 
@@ -125,7 +124,6 @@ public class App {
         } else if (answerOrder.equalsIgnoreCase("non")) {
             ordersTable.printTable();
         }
-        scanner.close();
         System.out.println("");
     }
 
@@ -159,7 +157,6 @@ public class App {
         } else if (answerSupply.equalsIgnoreCase("non")) {
             supplyTable.printTable();
         }
-        scanner.close();
         System.out.println("");
     }
 }

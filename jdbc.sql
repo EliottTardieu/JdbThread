@@ -58,7 +58,7 @@ CREATE TABLE `Commandes` (
   `id` int NOT NULL,
   `id_produits` text NOT NULL,
   `quantite_produits` text NOT NULL,
-  `prix` int NOT NULL,
+  `prix` float NOT NULL,
   `id_client` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -85,7 +85,7 @@ CREATE TABLE `Fournisseurs` (
 CREATE TABLE `Fournitures` (
   `id` int NOT NULL,
   `id_produits` text NOT NULL,
-  `prix` int NOT NULL,
+  `prix` float NOT NULL,
   `id_fournisseur` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -100,7 +100,7 @@ CREATE TABLE `Produits` (
   `nom` varchar(100) NOT NULL,
   `categorie` varchar(100) NOT NULL,
   `espece` varchar(100) NOT NULL,
-  `prix_unitaire` int NOT NULL,
+  `prix_unitaire` float NOT NULL,
   `quantite_disponible` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 

@@ -1,6 +1,7 @@
 package fr.jdbc;
 
 import fr.jdbc.models.*;
+import fr.jdbc.utils.Logger;
 
 import java.util.HashMap;
 import java.util.Scanner;
@@ -53,21 +54,47 @@ public class Main {
                     break;
 
                 case "7":
+                    Supply currentSupply = new Supply().initialize();
                     break;
 
                 case "8":
                     System.out.println("\t1) Ajouter un client\n"
                                      + "\t2) Modifier un client\n"
-                                     + "\t3) Supprimer un client");
+                                     + "\t3) Ajouter une reduction\n"
+                                     + "\t4) Supprimer un client");
                     String clientChoice = scanner.nextLine();
                     switch (clientChoice) {
                         case "1":
+                            Client currentClient = new Client().initialize();
                             break;
 
                         case "2":
+                            System.out.println("\t1) Modifier le nom\n"
+                                             + "\t2) Modifier le prénom");
                             break;
 
                         case "3":
+                            System.out.println("Entrez le nom du client: ");
+                            String clientName = scanner.nextLine();
+                            System.out.println("Entrez le prénom du client: ");
+                            String clientForename = scanner.nextLine();
+                            HashMap<String, Object> criteriasClientR = new HashMap<>();
+                            criteriasClientR.put("nom", clientName);
+                            criteriasClientR.put("prenom", clientForename);
+                            if (App.getInstance().getClientDAO().find(criteriasClientR) != null) {
+                                Client client = App.getInstance().getClientDAO().find(criteriasClientR);
+                                System.out.println("Entrez le montant de la réduction: ");
+                                int reduction = scanner.nextInt();
+                                scanner.nextLine();
+                                client.setDiscount(reduction);
+                                System.out.println("Reduction bien appliquée à "+ client.getName()+"\n");
+                                Logger.fine("Client reduction applied.");
+                            } else {
+                                Logger.severe("Unable to find client.");
+                            }
+                            break;
+
+                        case "4":
                             System.out.println("Entrez le nom du client que vous voulez supprimer: ");
                             App.getInstance().displayAllClients();
                             String removedClientName = scanner.nextLine();
@@ -76,6 +103,9 @@ public class Main {
                             if (App.getInstance().getClientDAO().find(criteriasClient) != null) {
                                 App.getInstance().getClientDAO().delete(App.getInstance().getClientDAO().find(criteriasClient));
                                 System.out.println("Client bien supprimé\n");
+                                Logger.fine("Client removed.");
+                            } else {
+                                Logger.severe("Unable to remove client.");
                             }
                             break;
                     }
@@ -88,9 +118,12 @@ public class Main {
                     String supplierChoice = scanner.nextLine();
                     switch (supplierChoice) {
                         case "1":
+                            Supplier supplier = new Supplier().initialize();
                             break;
 
                         case "2":
+                            System.out.println("\t1) Modifier le nom\n"
+                                             + "\t2) Modifier le prénom");
                             break;
 
                         case "3":
@@ -102,6 +135,9 @@ public class Main {
                             if (App.getInstance().getSupplierDAO().find(criteriasSupplier) != null) {
                                 App.getInstance().getSupplierDAO().delete(App.getInstance().getSupplierDAO().find(criteriasSupplier));
                                 System.out.println("Fournisseur bien supprimé\n");
+                                Logger.fine("Supplier removed.");
+                            } else {
+                                Logger.severe("Unable to remove supplier.");
                             }
                             break;
                     }
@@ -158,14 +194,17 @@ public class Main {
                             break;
 
                         case "3":
-                            System.out.println("Entrez le nom du produit que vous voulez supprimer: ");
+                            System.out.println("ATTENTION: Les produits que vous allez supprimer ici pourront impacter le reste de l'application, à n'utiliser qu'en connaissance de cause.");
+                            System.out.println("Entrez le nom du produit que vous voulez supprimer: (stop pour annuler)");
                             App.getInstance().displayAllProducts();
                             String removedProductName = scanner.nextLine();
-                            HashMap<String, Object> criteriasProduct = new HashMap<>();
-                            criteriasProduct.put("nom", removedProductName);
-                            if (App.getInstance().getProductDAO().find(criteriasProduct) != null) {
-                                App.getInstance().getProductDAO().delete(App.getInstance().getProductDAO().find(criteriasProduct));
-                                System.out.println("Produit bien supprimé\n");
+                            if(!removedProductName.equalsIgnoreCase("stop")){
+                                HashMap<String, Object> criteriasProduct = new HashMap<>();
+                                criteriasProduct.put("nom", removedProductName);
+                                if (App.getInstance().getProductDAO().find(criteriasProduct) != null) {
+                                    App.getInstance().getProductDAO().delete(App.getInstance().getProductDAO().find(criteriasProduct));
+                                    System.out.println("Produit bien supprimé\n");
+                                }
                             }
                     }
 
