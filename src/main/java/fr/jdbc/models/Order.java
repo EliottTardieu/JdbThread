@@ -21,6 +21,8 @@ public class Order extends Model {
     @Getter @Setter
     private Client client;
 
+    private HashMap<Product, Integer> backupQuantity = new HashMap<>();
+
     public Order() {
         super();
     }
@@ -98,6 +100,9 @@ public class Order extends Model {
         // Produits et Quantités
         boolean stop = false;
         System.out.println("Si vous avez fini, entrez \"stop\".");
+        for(Product product : App.getInstance().getProductDAO().getAll()){
+            this.backupQuantity.put(product, product.getAvailableQuantity());
+        }
         while(!stop) {
             App.getInstance().displayAllProducts();
             System.out.println("Entrez le nom du produit à ajouter: ");
@@ -109,8 +114,7 @@ public class Order extends Model {
                 criteriasProd.put("nom", choice);
                 if (App.getInstance().getProductDAO().find(criteriasProd) != null) {
                     Product product = App.getInstance().getProductDAO().find(criteriasProd);
-                    System.out.println(product.getName());
-                    System.out.println("Entrez une quantité pour ce produit: ");
+                    System.out.println("Entrez une quantité pour ce produit: (stop quand vous avez fini)");
                     int qt = scanner.nextInt();
                     scanner.nextLine();
                     if (qt <= 0) {
@@ -120,6 +124,8 @@ public class Order extends Model {
                     } else {
                         this.products.addLast(product);
                         this.quantityProduct.addLast(qt);
+                        product.setAvailableQuantity(product.getAvailableQuantity() - qt);
+                        App.getInstance().getProductDAO().save(product);
                     }
                 } else {
                     System.out.println("Wrong product name, please select a valid product.");
@@ -139,24 +145,32 @@ public class Order extends Model {
         if(choice.equalsIgnoreCase("oui") || choice.equals("yes")) {
             Logger.fine("Order Saved in database.");
             this.save();
+            System.out.println("Commande validée avec succès.");
         } else if (choice.equalsIgnoreCase("non") || choice.equals("no")) {
             Logger.warning("Order not saved, the content has been reset.");
             this.reset();
+            System.out.println("Commande annulée avec succès.");
         } else {
             Logger.severe("Unknown answer, order was reset by default.");
+            this.reset();
         }
         return this;
     }
 
     private void save(){
         for(int i = 0; i < this.products.size(); i++){
-            this.products.get(i).setAvailableQuantity(this.products.get(i).getAvailableQuantity() - this.quantityProduct.get(i));
             App.getInstance().getProductDAO().save(this.products.get(i));
         }
+        this.backupQuantity.clear();
         App.getInstance().getOrderDAO().save(this);
     }
 
     private void reset(){
+        // Pour remettre les quantités disponibles si la commande est annulée.
+        for(Product product : backupQuantity.keySet()){
+            product.setAvailableQuantity(backupQuantity.get(product));
+            App.getInstance().getProductDAO().save(product);
+        }
         this.products = new LinkedList<>();
         this.quantityProduct = new LinkedList<>();
         this.price = 0;
