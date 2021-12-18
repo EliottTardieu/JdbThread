@@ -28,6 +28,12 @@ public class FullAddress extends Model {
         this.setCity(string(data.get("ville")));
     }
 
+    /**
+     * Stocke les informations d'une adresse dans une liste, qui est elle-même mise
+     * dans la liste de toutes les adresses.
+     * @param data La liste de toutes les adresses que l'on met à jour à chaque appel.
+     * @return La liste des adresses mise à jour.
+     */
     public ArrayList<ArrayList<Object>> display(ArrayList<ArrayList<Object>> data) {
         ArrayList<Object> toAdd = new ArrayList<>();
         toAdd.add(this.getId());

@@ -36,6 +36,12 @@ public class Client extends Model {
         this.setAddress(App.getInstance().getFullAddressDAO().findById(integer(data.get("adresse"))));
     }
 
+    /**
+     * Stocke les informations d'un client dans une liste, qui est elle-même mise
+     * dans la liste de tous les clients.
+     * @param data La liste de tous les clients que l'on met à jour à chaque appel.
+     * @return La liste des clients mise à jour.
+     */
     public ArrayList<ArrayList<Object>> display(ArrayList<ArrayList<Object>> data) {
         ArrayList<Object> toAdd = new ArrayList<>();
         toAdd.add(this.getId());

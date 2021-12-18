@@ -54,7 +54,7 @@ public class Order extends Model {
         Scanner scanner = new Scanner(System.in);
         String choice;
         String clientName;
-        String clientForname;
+        String clientForename;
         String clientAddress;
         String clientCity;
         FullAddress clientFullAddress;
@@ -82,17 +82,17 @@ public class Order extends Model {
         System.out.println("Entrez le nom du client: ");
         clientName = scanner.nextLine();
         System.out.println("Entrez le prénom du client: ");
-        clientForname = scanner.nextLine();
+        clientForename = scanner.nextLine();
         HashMap<String, Object> criteriasCli = new HashMap<>();
         criteriasCli.put("nom", clientName);
-        criteriasCli.put("prenom", clientForname);
+        criteriasCli.put("prenom", clientForename);
         criteriasCli.put("adresse", clientFullAddress.getId());
         if (App.getInstance().getClientDAO().find(criteriasCli) != null) {
             this.client = App.getInstance().getClientDAO().find(criteriasCli);
         } else {
             this.client = new Client();
             this.client.setName(clientName);
-            this.client.setForename(clientForname);
+            this.client.setForename(clientForename);
             this.client.setAddress(clientFullAddress);
             App.getInstance().getClientDAO().save(client);
         }
@@ -181,7 +181,7 @@ public class Order extends Model {
      * Stocke les informations d'une commande dans une liste, qui est elle-même mise
      * dans la liste de toutes les commandes.
      * @param data La liste de toutes les commandes que l'on met à jour à chaque appel.
-     * @return data La liste des commandes mise à jour.
+     * @return La liste des commandes mise à jour.
      */
     public ArrayList<ArrayList<Object>> display(ArrayList<ArrayList<Object>> data) {
         ArrayList<Object> toAdd = new ArrayList<>();
@@ -197,8 +197,8 @@ public class Order extends Model {
     /**
      * Stocke le contenu d'une commande dans une liste, qui est elle-même mise
      * dans la liste concernant le contenu de toutes les commandes.
-     * @param content
-     * @return
+     * @param content La liste avec le contenu de toutes les commandes que l'on met à jour à chaque appel.
+     * @return La liste du contenu de toutes les commandes mise à jour.
      */
     public ArrayList<ArrayList<Object>> displayContent(ArrayList<ArrayList<Object>> content) {
         for(Product product : this.products) {
