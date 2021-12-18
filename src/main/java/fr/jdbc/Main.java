@@ -69,11 +69,35 @@ public class Main {
                             break;
 
                         case "2":
-                            System.out.println("\t1) Modifier le nom\n"
-                                             + "\t2) Modifier le prénom");
+                            System.out.println("Entrez le nom du client que vous voulez modifier: ");
+                            App.getInstance().displayAllClients();
+                            String modifiedClientSc = scanner.nextLine();
+                            HashMap<String, Object> criteriasModifiedClient = new HashMap<>();
+                            criteriasModifiedClient.put("nom", modifiedClientSc);
+                            if (App.getInstance().getClientDAO().find(criteriasModifiedClient) != null) {
+                                Client modifiedClient = App.getInstance().getClientDAO().find(criteriasModifiedClient);
+                                System.out.println("\t1) Modifier le nom\n"
+                                                 + "\t2) Modifier le prénom");
+                                String modifyClient = scanner.nextLine();
+                                switch (modifyClient) {
+                                    case "1":
+                                        System.out.println("Entrez le nouveau Nom du client: ");
+                                        modifiedClient.setName(scanner.nextLine());
+                                        App.getInstance().getClientDAO().save(modifiedClient);
+                                        break;
+                                    case "2":
+                                        System.out.println("Entrez le nouveau Prénom du client: ");
+                                        modifiedClient.setForename(scanner.nextLine());
+                                        App.getInstance().getClientDAO().save(modifiedClient);
+                                        break;
+                                }
+                            } else {
+                                Logger.severe("Unable to find such client.");
+                            }
                             break;
 
                         case "3":
+                            App.getInstance().displayAllClients();
                             System.out.println("Entrez le nom du client: ");
                             String clientName = scanner.nextLine();
                             System.out.println("Entrez le prénom du client: ");
@@ -87,6 +111,7 @@ public class Main {
                                 int reduction = scanner.nextInt();
                                 scanner.nextLine();
                                 client.setDiscount(reduction);
+                                App.getInstance().getClientDAO().save(client);
                                 System.out.println("Reduction bien appliquée à "+ client.getName()+"\n");
                                 Logger.fine("Client reduction applied.");
                             } else {
@@ -122,8 +147,31 @@ public class Main {
                             break;
 
                         case "2":
-                            System.out.println("\t1) Modifier le nom\n"
-                                             + "\t2) Modifier le prénom");
+                            System.out.println("Entrez le nom du fournisseur que vous voulez modifier: ");
+                            App.getInstance().displayAllSuppliers();
+                            String modifiedSupplierSc = scanner.nextLine();
+                            HashMap<String, Object> criteriasModifiedSupplier = new HashMap<>();
+                            criteriasModifiedSupplier.put("nom", modifiedSupplierSc);
+                            if (App.getInstance().getSupplierDAO().find(criteriasModifiedSupplier) != null) {
+                                Supplier modifiedSupplier = App.getInstance().getSupplierDAO().find(criteriasModifiedSupplier);
+                                System.out.println("\t1) Modifier le nom\n"
+                                                 + "\t2) Modifier le prénom");
+                                String modifySupplier = scanner.nextLine();
+                                switch (modifySupplier) {
+                                    case "1":
+                                        System.out.println("Entrez le nouveau Nom du fournisseur: ");
+                                        modifiedSupplier.setName(scanner.nextLine());
+                                        App.getInstance().getSupplierDAO().save(modifiedSupplier);
+                                        break;
+                                    case "2":
+                                        System.out.println("Entrez le nouveau Prénom du fournisseur: ");
+                                        modifiedSupplier.setForename(scanner.nextLine());
+                                        App.getInstance().getSupplierDAO().save(modifiedSupplier);
+                                        break;
+                                }
+                            } else {
+                                Logger.severe("Unable to find such supplier.");
+                            }
                             break;
 
                         case "3":
@@ -190,6 +238,8 @@ public class Main {
                                         System.out.println("La quantité en stock du produit a bien été modifié");
                                         break;
                                 }
+                            } else {
+                                Logger.severe("Unable to find such product.");
                             }
                             break;
 
@@ -212,7 +262,6 @@ public class Main {
             }
 
         }
-
         System.exit(0);
     }
 }
