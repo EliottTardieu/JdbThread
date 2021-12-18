@@ -60,6 +60,25 @@ public class Main {
                                      + "\t2) Modifier un client\n"
                                      + "\t3) Supprimer un client");
                     String clientChoice = scanner.nextLine();
+                    switch (clientChoice) {
+                        case "1":
+                            break;
+
+                        case "2":
+                            break;
+
+                        case "3":
+                            System.out.println("Entrez le nom du client que vous voulez supprimer : ");
+                            App.getInstance().displayAllClients();
+                            String removedClientName = scanner.nextLine();
+                            HashMap<String, Object> criteriasClient = new HashMap<>();
+                            criteriasClient.put("nom", removedClientName);
+                            if (App.getInstance().getClientDAO().find(criteriasClient) != null) {
+                                App.getInstance().getClientDAO().delete(App.getInstance().getClientDAO().find(criteriasClient));
+                                System.out.println("Client bien supprimé\n");
+                            }
+                            break;
+                    }
                     break;
 
                 case "9":
@@ -67,6 +86,25 @@ public class Main {
                                      + "\t2) Modifier un fournisseur\n"
                                      + "\t3) Supprimer un fournisseur");
                     String supplierChoice = scanner.nextLine();
+                    switch (supplierChoice) {
+                        case "1":
+                            break;
+
+                        case "2":
+                            break;
+
+                        case "3":
+                            System.out.println("Entrez le nom du fournisseur que vous voulez supprimer : ");
+                            App.getInstance().displayAllSuppliers();
+                            String removedSupplierName = scanner.nextLine();
+                            HashMap<String, Object> criteriasSupplier = new HashMap<>();
+                            criteriasSupplier.put("nom", removedSupplierName);
+                            if (App.getInstance().getSupplierDAO().find(criteriasSupplier) != null) {
+                                App.getInstance().getSupplierDAO().delete(App.getInstance().getSupplierDAO().find(criteriasSupplier));
+                                System.out.println("Fournisseur bien supprimé\n");
+                            }
+                            break;
+                    }
                     break;
 
                 case "10":
@@ -80,6 +118,9 @@ public class Main {
                             break;
 
                         case "2":
+                            System.out.println("\t1) Modifier le nom\n"
+                                             + "\t2) Modifier le prix unitaire\n"
+                                             + "\t3) Modifier la quantité en stock");
                             break;
 
                         case "3":
