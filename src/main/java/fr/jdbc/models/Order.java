@@ -45,7 +45,7 @@ public class Order extends Model {
     }
 
     /**
-     *  Methode pour créer
+     *  Methode pour créer une commande initialisée à partir de saisie dans un terminal.
      * @return Commande initialisée
      */
     public Order initialize(){
