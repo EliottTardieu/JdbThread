@@ -3,10 +3,7 @@ package fr.jdbc;
 import dnl.utils.text.table.TextTable;
 import fr.jdbc.models.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Scanner;
+import java.util.*;
 
 
 public class Main {
@@ -35,19 +32,20 @@ public class Main {
                     Object[][] formalizedDataClient = dataClient.stream().map(u -> u.toArray(new Object[0])).toArray(Object[][]::new);
                     TextTable clientTable = new TextTable(columnsClient, formalizedDataClient);
                     clientTable.printTable();
+                    System.out.println("");
                     break;
 
                 case "2":
                     String[] columnsSupplier = {"Id", "Nom", "Prénom", "Adresse", "Ville"};
                     ArrayList<ArrayList<Object>> dataSupplier = new ArrayList<>();
 
-                    String[] columnsSupplierContent = {"Nom", "Catégorie", "Prix Unitaire"};
+                    String[] columnsSupplierContent = {"Id", "Nom", "Catégorie", "Prix Unitaire"};
                     ArrayList<ArrayList<Object>> dataSupplierContent = new ArrayList<>();
 
                     for (Supplier supplier : App.getInstance().getSupplierDAO().getAll()) {
                         dataSupplier = supplier.display(dataSupplier);
-                        for (int i = 0; i < App.getInstance().getSupplierDAO().getAll().get(supplier.getId() - 1).getProducts().size(); i++) {
-                            dataSupplierContent = App.getInstance().getOrderDAO().getAll().get(supplier.getId() - 1).displayContent(dataSupplierContent, i);
+                        for (int i = 0; i < supplier.getProducts().size(); i++) {
+                            dataSupplierContent = supplier.displayContent(dataSupplierContent, i);
                         }
                     }
 
@@ -65,6 +63,7 @@ public class Main {
                     } else if (answerSupplier.equalsIgnoreCase("non")) {
                         supplierTable.printTable();
                     }
+                    System.out.println("");
                     break;
 
                 case "3":
@@ -76,19 +75,20 @@ public class Main {
                     Object[][] formalizedDataProducts = dataProducts.stream().map(u -> u.toArray(new Object[0])).toArray(Object[][]::new);
                     TextTable productsTable = new TextTable(columnsProducts, formalizedDataProducts);
                     productsTable.printTable();
+                    System.out.println("");
                     break;
 
                 case "4":
                     String[] columnsOrders = {"Id", "Prix", "Nom Client", "Adresse", "Ville"};
                     ArrayList<ArrayList<Object>> dataOrders = new ArrayList<>();
 
-                    String[] columnsOrderContent = {"Nom", "Quantité", "Prix Unitaire"};
+                    String[] columnsOrderContent = {"Id", "Nom", "Quantité", "Prix Unitaire"};
                     ArrayList<ArrayList<Object>> dataOrderContent = new ArrayList<>();
 
                     for (Order order : App.getInstance().getOrderDAO().getAll()) {
                         dataOrders = order.display(dataOrders);
-                        for (int i = 0; i < App.getInstance().getOrderDAO().getAll().get(order.getId() - 1).getProducts().size(); i++) {
-                            dataOrderContent = App.getInstance().getOrderDAO().getAll().get(order.getId() - 1).displayContent(dataOrderContent, i);
+                        for (int i = 0; i < order.getProducts().size(); i++) {
+                            dataOrderContent = order.displayContent(dataOrderContent, i);
                         }
                     }
 
@@ -106,10 +106,11 @@ public class Main {
                     } else if (answerOrder.equalsIgnoreCase("non")) {
                         ordersTable.printTable();
                     }
+                    System.out.println("");
                     break;
 
                 case "5":
-                    //TODO A toi de jouer Eliott
+
                     break;
             }
 
