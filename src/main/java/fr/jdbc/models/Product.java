@@ -18,7 +18,7 @@ public class Product extends Model {
     @Getter @Setter
     private String species;
     @Getter @Setter
-    private int unitPrice;
+    private float unitPrice;
     @Getter @Setter
     private int availableQuantity;
 
@@ -36,7 +36,7 @@ public class Product extends Model {
         this.setName(string(data.get("nom")));
         this.setCategory(string(data.get("categorie")));
         this.setSpecies(string(data.get("espece")));
-        this.setUnitPrice(integer(data.get("prix_unitaire")));
+        this.setUnitPrice(floatNumber(data.get("prix_unitaire")));
         this.setAvailableQuantity(integer(data.get("quantite_disponible")));
     }
 
@@ -49,7 +49,7 @@ public class Product extends Model {
         String productName;
         String productCategory;
         String productSpecies;
-        int productUnitPrice;
+        float productUnitPrice;
         int productAvailableQuantity;
 
         // Nom du produit
@@ -77,7 +77,7 @@ public class Product extends Model {
 
         // Prix unitaire
         System.out.println("Entrez le prix de votre " + productCategory + " : ");
-        productUnitPrice = scanner.nextInt();
+        productUnitPrice = scanner.nextFloat();
         scanner.nextLine();
         this.setUnitPrice(productUnitPrice);
 

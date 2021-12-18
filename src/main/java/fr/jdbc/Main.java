@@ -68,7 +68,7 @@ public class Main {
                             break;
 
                         case "3":
-                            System.out.println("Entrez le nom du client que vous voulez supprimer : ");
+                            System.out.println("Entrez le nom du client que vous voulez supprimer: ");
                             App.getInstance().displayAllClients();
                             String removedClientName = scanner.nextLine();
                             HashMap<String, Object> criteriasClient = new HashMap<>();
@@ -94,7 +94,7 @@ public class Main {
                             break;
 
                         case "3":
-                            System.out.println("Entrez le nom du fournisseur que vous voulez supprimer : ");
+                            System.out.println("Entrez le nom du fournisseur que vous voulez supprimer: ");
                             App.getInstance().displayAllSuppliers();
                             String removedSupplierName = scanner.nextLine();
                             HashMap<String, Object> criteriasSupplier = new HashMap<>();
@@ -118,13 +118,47 @@ public class Main {
                             break;
 
                         case "2":
-                            System.out.println("\t1) Modifier le nom\n"
-                                             + "\t2) Modifier le prix unitaire\n"
-                                             + "\t3) Modifier la quantité en stock");
+                            System.out.println("Entrez le nom du produit que vous voulez modifier: ");
+                            App.getInstance().displayAllProducts();
+                            String modifiedProductName = scanner.nextLine();
+                            HashMap<String, Object> criteriasModifiedProduct = new HashMap<>();
+                            criteriasModifiedProduct.put("nom", modifiedProductName);
+                            if (App.getInstance().getProductDAO().find(criteriasModifiedProduct) != null) {
+                                Product modifiedProduct = App.getInstance().getProductDAO().find(criteriasModifiedProduct);
+                                System.out.println("\t1) Modifier le nom\n"
+                                                 + "\t2) Modifier le prix unitaire\n"
+                                                 + "\t3) Modifier la quantité en stock");
+                                String modifyObject = scanner.nextLine();
+                                switch (modifyObject) {
+                                    case "1":
+                                        System.out.println("Entrer le nouveau nom: ");
+                                        String newNameProduct = scanner.nextLine();
+                                        modifiedProduct.setName(newNameProduct);
+                                        App.getInstance().getProductDAO().save(modifiedProduct);
+                                        System.out.println("Le nom du produit a bien été modifié");
+                                        break;
+
+                                    case "2":
+                                        System.out.println("Entrer le nouveau prix: ");
+                                        String newPriceProduct = scanner.nextLine();
+                                        modifiedProduct.setUnitPrice(Float.parseFloat(newPriceProduct));
+                                        App.getInstance().getProductDAO().save(modifiedProduct);
+                                        System.out.println("Le prix du produit a bien été modifié");
+                                        break;
+
+                                    case "3":
+                                        System.out.println("Entrer la nouvelle quantité en stock: ");
+                                        String newQuantityProduct = scanner.nextLine();
+                                        modifiedProduct.setAvailableQuantity(Integer.parseInt(newQuantityProduct));
+                                        App.getInstance().getProductDAO().save(modifiedProduct);
+                                        System.out.println("La quantité en stock du produit a bien été modifié");
+                                        break;
+                                }
+                            }
                             break;
 
                         case "3":
-                            System.out.println("Entrez le nom du produit que vous voulez supprimer : ");
+                            System.out.println("Entrez le nom du produit que vous voulez supprimer: ");
                             App.getInstance().displayAllProducts();
                             String removedProductName = scanner.nextLine();
                             HashMap<String, Object> criteriasProduct = new HashMap<>();
