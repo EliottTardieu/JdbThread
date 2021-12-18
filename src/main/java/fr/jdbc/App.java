@@ -115,4 +115,33 @@ public class App {
         System.out.println("");
     }
 
+    public void displayAllSupply() {
+        String[] columnsSupply = {"Id", "Nom", "Prénom", "Prix"};
+        ArrayList<ArrayList<Object>> dataSupply = new ArrayList<>();
+
+        String[] columnsSupplyContent = {"Id Fourniture", "Nom", "Catégorie", "Prix Unitaire"};
+        ArrayList<ArrayList<Object>> dataSupplyContent = new ArrayList<>();
+
+        for (Supply supply : App.getInstance().getSupplyDAO().getAll()) {
+            dataSupply = supply.display(dataSupply);
+            dataSupplyContent = supply.displayContent(dataSupplyContent);
+        }
+
+        Object[][] formalizedDataSupply = dataSupply.stream().map(u -> u.toArray(new Object[0])).toArray(Object[][]::new);
+        TextTable supplyTable = new TextTable(columnsSupply, formalizedDataSupply);
+
+        Object[][] formalizedDataSupplyContent = dataSupplyContent.stream().map(u -> u.toArray(new Object[0])).toArray(Object[][]::new);
+        TextTable supplyContentTable = new TextTable(columnsSupplyContent, formalizedDataSupplyContent);
+
+        System.out.println("Voulez-vous voir la liste des produits associés aux fournitures également ? (Oui/Non)");
+        Scanner scanner = new Scanner(System.in);
+        String answerSupply = scanner.nextLine();
+        if (answerSupply.equalsIgnoreCase("oui")) {
+            supplyTable.printTable();
+            supplyContentTable.printTable();
+        } else if (answerSupply.equalsIgnoreCase("non")) {
+            supplyTable.printTable();
+        }
+        System.out.println("");
+    }
 }

@@ -163,6 +163,12 @@ public class Order extends Model {
         this.client = null;
     }
 
+    /**
+     * Stocke les informations d'une commande dans une liste, qui est elle-même mise
+     * dans la liste de toutes les commandes.
+     * @param data La liste de toutes les commandes que l'on met à jour à chaque appel.
+     * @return data La liste des commandes mise à jour.
+     */
     public ArrayList<ArrayList<Object>> display(ArrayList<ArrayList<Object>> data) {
         ArrayList<Object> toAdd = new ArrayList<>();
         toAdd.add(this.getId());
@@ -174,6 +180,12 @@ public class Order extends Model {
         return data;
     }
 
+    /**
+     * Stocke le contenu d'une commande dans une liste, qui est elle-même mise
+     * dans la liste concernant le contenu de toutes les commandes.
+     * @param content
+     * @return
+     */
     public ArrayList<ArrayList<Object>> displayContent(ArrayList<ArrayList<Object>> content) {
         for(Product product : this.products) {
             ArrayList<Object> toAdd = new ArrayList<>();

@@ -21,7 +21,8 @@ public class Main {
                              + "2) Afficher la liste des fournisseurs\n"
                              + "3) Afficher la liste des produits\n"
                              + "4) Afficher la liste des commandes\n"
-                             + "5) Créer une commande\n"
+                             + "5) Afficher la liste des fournitures\n"
+                             + "6) Créer une commande\n"
                              + "Tapez exit si vous souhaitez sortir de l'interface");
             choice = scanner.nextLine();
             switch (choice) {
@@ -42,6 +43,10 @@ public class Main {
                     break;
 
                 case "5":
+                    App.getInstance().displayAllSupply();
+                    break;
+
+                case "6":
                     Order currentOrder = new Order().initialize();
                     break;
             }
