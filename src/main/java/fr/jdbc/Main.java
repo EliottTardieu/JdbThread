@@ -1,11 +1,8 @@
 package fr.jdbc;
 
-import dnl.utils.text.table.TextTable;
 import fr.jdbc.models.*;
 
-import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.*;
 
 
 public class Main {
@@ -19,10 +16,14 @@ public class Main {
         while (!choice.equalsIgnoreCase("exit")) {
             System.out.println("1) Afficher la liste des clients\n"
                              + "2) Afficher la liste des fournisseurs\n"
-                             + "3) Afficher la liste des produits\n"
-                             + "4) Afficher la liste des commandes\n"
-                             + "5) Afficher la liste des fournitures\n"
+                             + "3) Afficher la liste des fournitures\n"
+                             + "4) Afficher la liste des produits\n"
+                             + "5) Afficher la liste des commandes\n"
                              + "6) Créer une commande\n"
+                             + "7) Créer une fourniture\n"
+                             + "8) Gérer les clients\n"
+                             + "6) Gérer les fournisseurs\n"
+                             + "6) Gérer les produits\n"
                              + "Tapez exit si vous souhaitez sortir de l'interface");
             choice = scanner.nextLine();
             switch (choice) {
@@ -35,15 +36,15 @@ public class Main {
                     break;
 
                 case "3":
-                    App.getInstance().displayAllProducts();
+                    App.getInstance().displayAllSupplies();
                     break;
 
                 case "4":
-                    App.getInstance().displayAllOrders();
+                    App.getInstance().displayAllProducts();
                     break;
 
                 case "5":
-                    App.getInstance().displayAllSupply();
+                    App.getInstance().displayAllOrders();
                     break;
 
                 case "6":

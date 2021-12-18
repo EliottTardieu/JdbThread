@@ -33,6 +33,9 @@ public class App {
         return instance;
     }
 
+    /**
+     * Affiche la liste de tous les clients
+     */
     public void displayAllClients(){
         String[] columnsClient = {"Id", "Nom", "Prénom", "Réduction", "Adresse", "Ville"};
         ArrayList<ArrayList<Object>> dataClient = new ArrayList<>();
@@ -44,6 +47,9 @@ public class App {
         clientTable.printTable();
     }
 
+    /**
+     * Affiche la liste de tous les fournisseurs
+     */
     public void displayAllSuppliers(){
         String[] columnsSupplier = {"Id", "Nom", "Prénom", "Adresse", "Ville"};
         ArrayList<ArrayList<Object>> dataSupplier = new ArrayList<>();
@@ -71,9 +77,13 @@ public class App {
         } else if (answerSupplier.equalsIgnoreCase("non")) {
             supplierTable.printTable();
         }
+        scanner.close();
         System.out.println("");
     }
 
+    /**
+     * Affiche la liste de tous les produits
+     */
     public void displayAllProducts(){
         String[] columnsProducts = {"Id", "Nom", "Catégorie", "Espèce", "Prix Unitaire", "Stock Disponible"};
         ArrayList<ArrayList<Object>> dataProducts = new ArrayList<>();
@@ -85,6 +95,9 @@ public class App {
         productsTable.printTable();
     }
 
+    /**
+     * Affiche la liste de toutes les commandes
+     */
     public void displayAllOrders(){
         String[] columnsOrders = {"Id", "Prix", "Nom Client", "Adresse", "Ville"};
         ArrayList<ArrayList<Object>> dataOrders = new ArrayList<>();
@@ -112,10 +125,14 @@ public class App {
         } else if (answerOrder.equalsIgnoreCase("non")) {
             ordersTable.printTable();
         }
+        scanner.close();
         System.out.println("");
     }
 
-    public void displayAllSupply() {
+    /**
+     * Affiche la liste de toutes les fournitures
+     */
+    public void displayAllSupplies() {
         String[] columnsSupply = {"Id", "Nom", "Prénom", "Prix"};
         ArrayList<ArrayList<Object>> dataSupply = new ArrayList<>();
 
@@ -142,6 +159,7 @@ public class App {
         } else if (answerSupply.equalsIgnoreCase("non")) {
             supplyTable.printTable();
         }
+        scanner.close();
         System.out.println("");
     }
 }
