@@ -16,7 +16,7 @@ import java.util.Properties;
 
 public abstract class DAO<T extends Model> {
 
-    private static String HOST = "jdbc:mysql://localhost:3306/jdbc?useSSL=false";
+    private static String HOST = "jdbc:mysql://localhost:3306/s7_hibernate?useSSL=false";
     private static String USER;
     private static String PASSWORD;
 
