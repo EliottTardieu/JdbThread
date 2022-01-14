@@ -15,7 +15,7 @@ public class Logger {
     private static FileHandler fileHandler = fileHandler();
 
     //Too slow for really fast writing, so it misses alot of code.
-    private static FileHandler fileHandler(){
+    private static FileHandler fileHandler() {
         SimpleDateFormat fileTime = new SimpleDateFormat("yyyy/MM/dd/HH/mm");
         try {
             //Initializing the log file path
@@ -32,24 +32,28 @@ public class Logger {
         return fileHandler;
     }
 
-    public static void severe(String msg){
+    public static void severe(String msg) {
         logger.severe(msg);
     }
 
-    public static void warning(String msg){
+    public static void warning(String msg) {
         logger.warning(msg);
     }
 
-    public static void fine(String msg){
+    public static void fine(String msg) {
         logger.fine(msg);
     }
 
-    public static void error(String msg, Exception e){ error(msg, e, false); }
+    public static void error(String msg, Exception e) {
+        error(msg, e, false);
+    }
 
-    public static void error(String msg, Exception e, boolean quit){ logger.log(Level.SEVERE, msg, e); }
+    public static void error(String msg, Exception e, boolean quit) {
+        logger.log(Level.SEVERE, msg, e);
+    }
 
-    public static void exit(){
-        for(Handler h: logger.getHandlers()) {
+    public static void exit() {
+        for (Handler h : logger.getHandlers()) {
             h.close();   //must call h.close or a .LCK file will remain.
         }
     }

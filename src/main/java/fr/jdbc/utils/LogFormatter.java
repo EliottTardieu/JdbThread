@@ -8,7 +8,7 @@ import java.util.logging.Formatter;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-public class LogFormatter extends Formatter  {
+public class LogFormatter extends Formatter {
 
     // ANSI escape code
     public static final String ANSI_RESET = "\u001B[0m";
@@ -27,7 +27,7 @@ public class LogFormatter extends Formatter  {
 
     // format is called for every console log message
     @Override
-    public String format(LogRecord record)  {
+    public String format(LogRecord record) {
         // This example will print date/time, class, and log level in yellow,
         // followed by the log message and it's parameters in white .
         StringBuilder builder = new StringBuilder();
@@ -46,9 +46,9 @@ public class LogFormatter extends Formatter  {
 
         Object[] params = record.getParameters();
 
-        if (params != null)  {
+        if (params != null) {
             builder.append(" - ");
-            for (int i = 0; i < params.length; i++)  {
+            for (int i = 0; i < params.length; i++) {
                 builder.append(params[i]);
                 if (i < params.length - 1)
                     builder.append(", ");
@@ -63,7 +63,6 @@ public class LogFormatter extends Formatter  {
             pw.close();
             builder.append(sw.toString());
         }
-
 
 
         //builder.append(ANSI_RESET);

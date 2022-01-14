@@ -3,37 +3,45 @@ package fr.jdbc.models;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import javax.persistence.*;
 
-public class FullAddress extends Model {
+@Entity
+public class FullAddress {
+    @Getter
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
     @Getter @Setter
     private String address;
+
     @Getter @Setter
     private String city;
 
+    @Getter @Setter
+    @OneToOne(mappedBy = "address", cascade = CascadeType.ALL)
+    private Client client;
+
+    @Getter @Setter
+    @OneToOne(mappedBy = "address", cascade = CascadeType.ALL)
+    private Supplier supplier;
+
     public FullAddress() {
-        super();
+
     }
 
-    public FullAddress(HashMap<String, Object> data) {
-        super(data);
-    }
-
-    @Override
-    protected void hydrate(HashMap<String, Object> data) {
-        this.setId(integer(data.get("id")));
-        this.setAddress(string(data.get("adresse")));
-        this.setCity(string(data.get("ville")));
+    public FullAddress(String address, String city) {
+        this.address = address;
+        this.city = city;
     }
 
     /**
      * Stocke les informations d'une adresse dans une liste, qui est elle-même mise
      * dans la liste de toutes les adresses.
+     *
      * @param data La liste de toutes les adresses que l'on met à jour à chaque appel.
      * @return La liste des adresses mise à jour.
      */
+    /*
     public ArrayList<ArrayList<Object>> display(ArrayList<ArrayList<Object>> data) {
         ArrayList<Object> toAdd = new ArrayList<>();
         toAdd.add(this.getId());
@@ -42,4 +50,5 @@ public class FullAddress extends Model {
         data.add(toAdd);
         return data;
     }
+    */
 }

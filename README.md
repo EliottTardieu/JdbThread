@@ -17,7 +17,7 @@ attached.
 
 ### Database Setup
 
-Here we have the procedure to follow in order to install the database. All commands are meant to be run in bash.
+Here we is the procedure to follow in order to install the database. All commands are meant to be run in bash.
 
 <ol>
     <li>You must log in your mysql server using "mysql -u username -p".</li>
@@ -26,7 +26,7 @@ Here we have the procedure to follow in order to install the database. All comma
     <li>Once you are in the right directory, you will execute this command: "mysql -u root -p s7_hibernate < s7_hibernate.sql".</li>
     <li>After, to fill this database, you will execute this command: "mysql -u root -p s7_hibernate < s7_hibernate_data.sql".</li>
 </ol>
-You have now imported and filled successfully the jdbc database, with already existing examples in it.
+You have now imported successfully the jdbc database, with already existing examples in it.
 
 ##### Now to get your jdbc Database to work:
 

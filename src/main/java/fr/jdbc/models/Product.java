@@ -1,50 +1,64 @@
 package fr.jdbc.models;
 
-import fr.jdbc.App;
-import fr.jdbc.utils.Logger;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Scanner;
+import javax.persistence.*;
+import java.util.*;
 
-public class Product extends Model {
+@Entity
+public class Product {
+    @Getter
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
     @Getter @Setter
     private String name;
+
     @Getter @Setter
     private String category;
+
     @Getter @Setter
     private String species;
+
     @Getter @Setter
     private float unitPrice;
+
     @Getter @Setter
     private int availableQuantity;
 
+    @Getter @Setter
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Supplier supplier;
+
+    @Getter @Setter
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Supply supply;
+
+    @Getter @Setter
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private Set<OrderContent> orderContents;
+
     public Product() {
-        super();
+        this.orderContents = new HashSet<>();
     }
 
-    public Product(HashMap<String, Object> data) {
-        super(data);
-    }
-
-    @Override
-    protected void hydrate(HashMap<String, Object> data) {
-        this.setId(integer(data.get("id")));
-        this.setName(string(data.get("nom")));
-        this.setCategory(string(data.get("categorie")));
-        this.setSpecies(string(data.get("espece")));
-        this.setUnitPrice(floatNumber(data.get("prix_unitaire")));
-        this.setAvailableQuantity(integer(data.get("quantite_disponible")));
+    public Product(String name, String category, String species, float unitPrice, int availableQuantity) {
+        this.orderContents = new HashSet<>();
+        this.name = name;
+        this.category = category;
+        this.species = species;
+        this.unitPrice = unitPrice;
+        this.availableQuantity = availableQuantity;
     }
 
     /**
      * Methode pour créer une produit initialisée à partir de saisie dans un terminal.
+     *
      * @return Commande initialisée
      */
-    public Product initialize(){
+    /*
+    public Product initialize() {
         Scanner scanner = new Scanner(System.in);
         String productName;
         String productCategory;
@@ -92,13 +106,15 @@ public class Product extends Model {
 
         return this;
     }
-
+    */
     /**
      * Stocke les informations d'un produit dans une liste, qui est elle-même mise
      * dans la liste de tous les produits.
+     *
      * @param data La liste de tous les produits que l'on met à jour à chaque appel.
      * @return La liste des produits mise à jour.
      */
+    /*
     public ArrayList<ArrayList<Object>> display(ArrayList<ArrayList<Object>> data) {
         ArrayList<Object> toAdd = new ArrayList<>();
         toAdd.add(this.getId());
@@ -110,4 +126,5 @@ public class Product extends Model {
         data.add(toAdd);
         return data;
     }
+    */
 }

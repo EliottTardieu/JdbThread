@@ -1,48 +1,51 @@
 package fr.jdbc.models;
 
-import dnl.utils.text.table.TextTable;
-import fr.jdbc.App;
-import fr.jdbc.utils.Logger;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Scanner;
+import javax.persistence.*;
 
-public class Client extends Model {
+@Entity
+public class Client {
+    @Getter
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
     @Getter @Setter
     private String name;
+
     @Getter @Setter
     private String forename;
+
     @Getter @Setter
+    @OneToOne(cascade = CascadeType.ALL)
     private FullAddress address;
+
     @Getter @Setter
     private int discount;
 
+    @Getter @Setter
+    @OneToOne(mappedBy = "client", cascade = CascadeType.ALL)
+    private Ordering ordering;
+
     public Client() {
-        super();
+
     }
 
-    public Client(HashMap<String, Object> data) {
-        super(data);
-    }
-
-    @Override
-    protected void hydrate(HashMap<String, Object> data) {
-        this.setId(integer(data.get("id")));
-        this.setName(string(data.get("nom")));
-        this.setForename(string(data.get("prenom")));
-        this.setDiscount(integer(data.get("reduction")));
-        this.setAddress(App.getInstance().getFullAddressDAO().findById(integer(data.get("adresse"))));
+    public Client(String name, String forename, FullAddress address, int discount) {
+        this.name = name;
+        this.forename = forename;
+        this.address = address;
+        this.discount = discount;
     }
 
     /**
-     *  Methode pour créer un client initialisé à partir de saisie dans un terminal.
+     * Methode pour créer un client initialisé à partir de saisie dans un terminal.
+     *
      * @return Client initialisée
      */
-    public Client initialize(){
+    /*
+    public Client initialize() {
         Scanner scanner = new Scanner(System.in);
         String clientAddress;
         String clientCity;
@@ -80,13 +83,15 @@ public class Client extends Model {
         App.getInstance().getClientDAO().save(this);
         return this;
     }
-
+    */
     /**
      * Stocke les informations d'un client dans une liste, qui est elle-même mise
      * dans la liste de tous les clients.
+     *
      * @param data La liste de tous les clients que l'on met à jour à chaque appel.
      * @return La liste des clients mise à jour.
      */
+    /*
     public ArrayList<ArrayList<Object>> display(ArrayList<ArrayList<Object>> data) {
         ArrayList<Object> toAdd = new ArrayList<>();
         toAdd.add(this.getId());
@@ -98,4 +103,5 @@ public class Client extends Model {
         data.add(toAdd);
         return data;
     }
+    */
 }

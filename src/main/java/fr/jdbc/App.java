@@ -18,7 +18,9 @@ public class App {
     @Getter
     private final FullAddressDAO fullAddressDAO = new FullAddressDAO();
     @Getter
-    private final OrderDAO orderDAO = new OrderDAO();
+    private final OrderContentDAO orderContentDAO = new OrderContentDAO();
+    @Getter
+    private final OrderingDAO orderingDAO = new OrderingDAO();
     @Getter
     private final ProductDAO productDAO = new ProductDAO();
     @Getter
@@ -26,17 +28,19 @@ public class App {
     @Getter
     private final SupplyDAO supplyDAO = new SupplyDAO();
 
-    private App(){}
+    private App() {
+    }
 
-    public static App getInstance(){
-        if(instance == null) return new App();
+    public static App getInstance() {
+        if (instance == null) return new App();
         return instance;
     }
 
     /**
      * Affiche la liste de tous les clients
      */
-    public void displayAllClients(){
+    /*
+    public void displayAllClients() {
         String[] columnsClient = {"Id", "Nom", "Prénom", "Réduction", "Adresse", "Ville"};
         ArrayList<ArrayList<Object>> dataClient = new ArrayList<>();
         for (Client client : App.getInstance().getClientDAO().getAll()) {
@@ -46,11 +50,13 @@ public class App {
         TextTable clientTable = new TextTable(columnsClient, formalizedDataClient);
         clientTable.printTable();
     }
+    */
 
     /**
      * Affiche la liste de tous les fournisseurs
      */
-    public void displayAllSuppliers(){
+    /*
+    public void displayAllSuppliers() {
         String[] columnsSupplier = {"Id", "Nom", "Prénom", "Adresse", "Ville"};
         ArrayList<ArrayList<Object>> dataSupplier = new ArrayList<>();
 
@@ -79,11 +85,13 @@ public class App {
         }
         System.out.println("");
     }
+    */
 
     /**
      * Affiche la liste de tous les produits
      */
-    public void displayAllProducts(){
+    /*
+    public void displayAllProducts() {
         String[] columnsProducts = {"Id", "Nom", "Catégorie", "Espèce", "Prix Unitaire", "Stock Disponible"};
         ArrayList<ArrayList<Object>> dataProducts = new ArrayList<>();
         for (Product product : App.getInstance().getProductDAO().getAll()) {
@@ -93,11 +101,13 @@ public class App {
         TextTable productsTable = new TextTable(columnsProducts, formalizedDataProducts);
         productsTable.printTable();
     }
+    */
 
     /**
      * Affiche la liste de toutes les commandes
      */
-    public void displayAllOrders(){
+    /*
+    public void displayAllOrders() {
         String[] columnsOrders = {"Id", "Prix", "Nom Client", "Adresse", "Ville"};
         ArrayList<ArrayList<Object>> dataOrders = new ArrayList<>();
 
@@ -126,10 +136,12 @@ public class App {
         }
         System.out.println("");
     }
+    */
 
     /**
      * Affiche la liste de toutes les fournitures
      */
+    /*
     public void displayAllSupplies() {
         String[] columnsSupply = {"Id", "Nom", "Prénom", "Prix"};
         ArrayList<ArrayList<Object>> dataSupply = new ArrayList<>();
@@ -159,4 +171,5 @@ public class App {
         }
         System.out.println("");
     }
+    */
 }

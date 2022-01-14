@@ -1,51 +1,53 @@
 package fr.jdbc.models;
 
-import fr.jdbc.App;
-import fr.jdbc.utils.Logger;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Scanner;
+import javax.persistence.*;
+import java.util.*;
 
-public class Supplier extends Model {
+@Entity
+public class Supplier {
+    @Getter
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
     @Getter @Setter
     private String name;
+
     @Getter @Setter
     private String forename;
+
     @Getter @Setter
-    private ArrayList<Product> products = new ArrayList<>();
-    @Getter @Setter
+    @OneToOne(cascade = CascadeType.ALL)
     private FullAddress address;
 
+    @Getter @Setter
+    @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL)
+    private List<Product> products;
+
+    @Getter @Setter
+    @OneToOne(mappedBy = "supplier", cascade = CascadeType.ALL)
+    private Supply supply;
+
     public Supplier() {
-        super();
-    }
-
-    public Supplier(HashMap<String, Object> data) {
         this.products = new ArrayList<>();
-        this.hydrate(data);
     }
 
-    @Override
-    protected void hydrate(HashMap<String, Object> data) {
-        this.setId(integer(data.get("id")));
-        this.setName(string(data.get("nom")));
-        this.setForename(string(data.get("prenom")));
-        for (String id : string(data.get("id_produits")).split(",")) {
-            this.products.add(App.getInstance().getProductDAO().findById(Integer.parseInt(id)));
-        }
-        this.setAddress(App.getInstance().getFullAddressDAO().findById(integer(data.get("adresse"))));
+    public Supplier(String name, String forename, FullAddress address) {
+        this.products = new ArrayList<>();
+        this.name = name;
+        this.forename = forename;
+        this.address = address;
     }
 
     /**
-     *  Methode pour créer un fournisseur initialisé à partir de saisie dans un terminal.
+     * Methode pour créer un fournisseur initialisé à partir de saisie dans un terminal.
+     *
      * @return Fournisseur initialisée
      */
-    public Supplier initialize(){
+    /*
+    public Supplier initialize() {
         Scanner scanner = new Scanner(System.in);
         String choice;
         String supplierAddress;
@@ -79,11 +81,11 @@ public class Supplier extends Model {
         // Produits
         boolean stop = false;
         System.out.println("Si vous avez fini, entrez \"stop\".");
-        while(!stop) {
+        while (!stop) {
             App.getInstance().displayAllProducts();
             System.out.println("Entrez le nom du produit à ajouter: ");
             choice = scanner.nextLine();
-            if(choice.equalsIgnoreCase("stop")) {
+            if (choice.equalsIgnoreCase("stop")) {
                 stop = true;
             } else {
                 HashMap<String, Object> criteriasProd = new HashMap<>();
@@ -101,13 +103,15 @@ public class Supplier extends Model {
         App.getInstance().getSupplierDAO().save(this);
         return this;
     }
-
+    */
     /**
      * Stocke les informations d'un fournisseur dans une liste, qui est elle-même mise
      * dans la liste de tous les fournisseurs.
+     *
      * @param data La liste de tous les fournisseurs que l'on met à jour à chaque appel.
      * @return La liste des fournisseurs mise à jour.
      */
+    /*
     public ArrayList<ArrayList<Object>> display(ArrayList<ArrayList<Object>> data) {
         ArrayList<Object> toAdd = new ArrayList<>();
         toAdd.add(this.getId());
@@ -119,15 +123,17 @@ public class Supplier extends Model {
         data.add(toAdd);
         return data;
     }
-
+    */
     /**
      * Stocke le contenu d'un fournisseur dans une liste, qui est elle-même mise
      * dans la liste concernant le contenu de tous les fournisseurs.
+     *
      * @param content La liste avec le contenu de tous les fournisseurs que l'on met à jour à chaque appel.
      * @return La liste du contenu de tous les fournisseurs mise à jour.
      */
+    /*
     public ArrayList<ArrayList<Object>> displayContent(ArrayList<ArrayList<Object>> content) {
-        for(Product product : this.getProducts()) {
+        for (Product product : this.getProducts()) {
             ArrayList<Object> toAdd = new ArrayList<>();
             toAdd.add(this.getId());
             toAdd.add(product.getName());
@@ -137,4 +143,5 @@ public class Supplier extends Model {
         }
         return content;
     }
+    */
 }

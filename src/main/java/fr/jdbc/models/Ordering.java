@@ -1,56 +1,47 @@
 package fr.jdbc.models;
 
-import fr.jdbc.App;
-import fr.jdbc.utils.Logger;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Scanner;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
-public class Order extends Model {
+@Entity
+public class Ordering {
+    @Getter
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-    @Getter @Setter
-    private LinkedList<Product> products = new LinkedList<>();
-    @Getter @Setter
-    private LinkedList<Integer> quantityProduct = new LinkedList<>();
     @Getter @Setter
     private float price;
+
     @Getter @Setter
+    @OneToOne(cascade = CascadeType.ALL)
     private Client client;
 
-    private HashMap<Product, Integer> backupQuantity = new HashMap<>();
+    @Getter @Setter
+    @OneToMany(mappedBy = "ordering", cascade = CascadeType.ALL)
+    private Set<OrderContent> orderContents;
 
-    public Order() {
-        super();
+    //private HashMap<Product, Integer> backupQuantity = new HashMap<>();
+
+    public Ordering() {
+        this.orderContents = new HashSet<>();
     }
 
-    public Order(HashMap<String, Object> data) {
-        this.products = new LinkedList<>();
-        this.quantityProduct = new LinkedList<>();
-        this.hydrate(data);
+    public Ordering(float price, Client client) {
+        this.orderContents = new HashSet<>();
+        this.price = price;
+        this.client = client;
     }
-
-    @Override
-    protected void hydrate(HashMap<String, Object> data) {
-        this.setId(integer(data.get("id")));
-        for (String id : string(data.get("id_produits")).split(",")) {
-            this.products.addLast(App.getInstance().getProductDAO().findById(Integer.parseInt(id)));
-        }
-        for (String quantity : string(data.get("quantite_produits")).split(",")) {
-            this.quantityProduct.addLast(Integer.parseInt(quantity));
-        }
-        this.setClient(App.getInstance().getClientDAO().findById(integer(data.get("id_client"))));
-        this.setPrice(floatNumber(data.get("prix")));
-    }
-
     /**
-     *  Methode pour créer une commande initialisée à partir de saisie dans un terminal.
+     * Methode pour créer une commande initialisée à partir de saisie dans un terminal.
+     *
      * @return Commande initialisée
      */
-    public Order initialize(){
+    /*
+    public Order initialize() {
         Scanner scanner = new Scanner(System.in);
         String choice;
         String clientName;
@@ -100,14 +91,14 @@ public class Order extends Model {
         // Produits et Quantités
         boolean stop = false;
         System.out.println("Si vous avez fini, entrez \"stop\".");
-        for(Product product : App.getInstance().getProductDAO().getAll()){
+        for (Product product : App.getInstance().getProductDAO().getAll()) {
             this.backupQuantity.put(product, product.getAvailableQuantity());
         }
-        while(!stop) {
+        while (!stop) {
             App.getInstance().displayAllProducts();
             System.out.println("Entrez le nom du produit à ajouter: ");
             choice = scanner.nextLine();
-            if(choice.equalsIgnoreCase("stop")) {
+            if (choice.equalsIgnoreCase("stop")) {
                 stop = true;
             } else {
                 HashMap<String, Object> criteriasProd = new HashMap<>();
@@ -138,11 +129,11 @@ public class Order extends Model {
         for (int i = 0; i < products.size(); i++) {
             price += products.get(i).getUnitPrice() * quantityProduct.get(i);
         }
-        this.price = price*App.TVA-client.getDiscount();
+        this.price = price * App.TVA - client.getDiscount();
 
         System.out.println("Commande terminée, confirmer l'enregistrement ? ");
         choice = scanner.nextLine();
-        if(choice.equalsIgnoreCase("oui") || choice.equals("yes")) {
+        if (choice.equalsIgnoreCase("oui") || choice.equals("yes")) {
             Logger.fine("Order Saved in database.");
             this.save();
             System.out.println("Commande validée avec succès.");
@@ -156,18 +147,20 @@ public class Order extends Model {
         }
         return this;
     }
+    */
 
-    private void save(){
-        for(int i = 0; i < this.products.size(); i++){
+    /*
+    private void save() {
+        for (int i = 0; i < this.products.size(); i++) {
             App.getInstance().getProductDAO().save(this.products.get(i));
         }
         this.backupQuantity.clear();
         App.getInstance().getOrderDAO().save(this);
     }
 
-    private void reset(){
+    private void reset() {
         // Pour remettre les quantités disponibles si la commande est annulée.
-        for(Product product : backupQuantity.keySet()){
+        for (Product product : backupQuantity.keySet()) {
             product.setAvailableQuantity(backupQuantity.get(product));
             App.getInstance().getProductDAO().save(product);
         }
@@ -176,13 +169,15 @@ public class Order extends Model {
         this.price = 0;
         this.client = null;
     }
-
+    */
     /**
      * Stocke les informations d'une commande dans une liste, qui est elle-même mise
      * dans la liste de toutes les commandes.
+     *
      * @param data La liste de toutes les commandes que l'on met à jour à chaque appel.
      * @return La liste des commandes mise à jour.
      */
+    /*
     public ArrayList<ArrayList<Object>> display(ArrayList<ArrayList<Object>> data) {
         ArrayList<Object> toAdd = new ArrayList<>();
         toAdd.add(this.getId());
@@ -193,15 +188,18 @@ public class Order extends Model {
         data.add(toAdd);
         return data;
     }
+    */
 
     /**
      * Stocke le contenu d'une commande dans une liste, qui est elle-même mise
      * dans la liste concernant le contenu de toutes les commandes.
+     *
      * @param content La liste avec le contenu de toutes les commandes que l'on met à jour à chaque appel.
      * @return La liste du contenu de toutes les commandes mise à jour.
      */
+    /*
     public ArrayList<ArrayList<Object>> displayContent(ArrayList<ArrayList<Object>> content) {
-        for(Product product : this.products) {
+        for (Product product : this.products) {
             ArrayList<Object> toAdd = new ArrayList<>();
             toAdd.add(this.getId());
             toAdd.add(product.getName());
@@ -211,4 +209,5 @@ public class Order extends Model {
         }
         return content;
     }
+    */
 }

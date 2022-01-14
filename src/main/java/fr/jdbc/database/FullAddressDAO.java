@@ -2,53 +2,35 @@ package fr.jdbc.database;
 
 import fr.jdbc.models.FullAddress;
 
+import javax.persistence.EntityManager;
 import java.util.HashMap;
+import java.util.List;
 
-public class FullAddressDAO extends DAO<FullAddress> {
+public class FullAddressDAO {
 
     public FullAddressDAO() {
-        super(FullAddress.class);
+
     }
 
-    /**
-     * Retourne le nom de la table correspondant a l'objet T
-     *
-     * @return Le nom d'une table SQL
-     */
-    @Override
-    protected String tableName() {
-        return "AdressesCompletes";
+    public void save(EntityManager em, FullAddress fullAddress) {
+        em.getTransaction().begin();
+        em.persist(fullAddress);
+        em.getTransaction().commit();
     }
 
-    /**
-     * Retourne une map associant une colonne SQL a sa valeur dans le cas d'un insert
-     *
-     * @param object Objet a mettre a jour
-     * @return Une Map associant une colonne a sa valeur
-     * @see this.insert
-     * @see this.save
-     */
-    @Override
-    protected HashMap<String, Object> getInsertMap(FullAddress object) {
-        HashMap<String, Object> insertMap = new HashMap<>();
-        insertMap.put("adresse", object.getAddress());
-        insertMap.put("ville", object.getCity());
-        return insertMap;
+    public void updateAddress(EntityManager em, FullAddress fullAddress, String newAddress) {
+        em.getTransaction().begin();
+        fullAddress.setAddress(newAddress);
+        em.getTransaction().commit();
     }
 
-    /**
-     * Retourne une map associant une colonne SQL a sa valeur dans le cas d'un update
-     *
-     * @param object Objet a mettre a jour
-     * @return Une Map associant une colonne a sa valeur
-     * @see this.update
-     * @see this.save
-     */
-    @Override
-    protected HashMap<String, Object> getUpdateMap(FullAddress object) {
-        HashMap<String, Object> updateMap = new HashMap<>();
-        updateMap.put("adresse", object.getAddress());
-        updateMap.put("ville", object.getCity());
-        return updateMap;
+    public void remove(EntityManager em, FullAddress fullAddress) {
+        em.getTransaction().begin();
+        em.remove(fullAddress);
+        em.getTransaction().commit();
+    }
+
+    public List<FullAddress> getAll(EntityManager em) {
+        return em.createQuery("from fullAddress").getResultList();
     }
 }

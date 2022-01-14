@@ -1,59 +1,44 @@
 package fr.jdbc.database;
 
 import fr.jdbc.models.Client;
+import fr.jdbc.models.FullAddress;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.util.HashMap;
+import java.util.List;
 
-public class ClientDAO extends DAO<Client> {
-
+public class ClientDAO {
 
     public ClientDAO() {
-        super(Client.class);
+
     }
 
-    /**
-     * Retourne le nom de la table correspondant a l'objet T
-     *
-     * @return Le nom d'une table SQL
-     */
-    @Override
-    protected String tableName() {
-        return "Clients";
+    public void save(EntityManager em, Client client) {
+        em.getTransaction().begin();
+        em.persist(client);
+        em.getTransaction().commit();
     }
 
-    /**
-     * Retourne une map associant une colonne SQL a sa valeur dans le cas d'un insert
-     *
-     * @param object Objet a mettre a jour
-     * @return Une Map associant une colonne a sa valeur
-     * @see this.insert
-     * @see this.save
-     */
-    @Override
-    protected HashMap<String, Object> getInsertMap(Client object) {
-        HashMap<String, Object> insertMap = new HashMap<>();
-        insertMap.put("nom", object.getName());
-        insertMap.put("prenom", object.getForename());
-        insertMap.put("reduction", object.getDiscount());
-        insertMap.put("adresse", object.getAddress().getId());
-        return insertMap;
+    public void updateName(EntityManager em, Client client, String newName) {
+        em.getTransaction().begin();
+        client.setName(newName);
+        em.getTransaction().commit();
     }
 
-    /**
-     * Retourne une map associant une colonne SQL a sa valeur dans le cas d'un update
-     *
-     * @param object Objet a mettre a jour
-     * @return Une Map associant une colonne a sa valeur
-     * @see this.update
-     * @see this.save
-     */
-    @Override
-    protected HashMap<String, Object> getUpdateMap(Client object) {
-        HashMap<String, Object> updateMap = new HashMap<>();
-        updateMap.put("nom", object.getName());
-        updateMap.put("prenom", object.getForename());
-        updateMap.put("reduction", object.getDiscount());
-        updateMap.put("adresse", object.getAddress().getId());
-        return updateMap;
+    public void updateForename(EntityManager em, Client client, String newForename) {
+        em.getTransaction().begin();
+        client.setForename(newForename);
+        em.getTransaction().commit();
+    }
+
+    public void remove(EntityManager em, Client client) {
+        em.getTransaction().begin();
+        em.remove(client);
+        em.getTransaction().commit();
+    }
+
+    public List<Client> getAll(EntityManager em) {
+        return em.createQuery("from Client").getResultList();
     }
 }

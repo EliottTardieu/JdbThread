@@ -1,48 +1,45 @@
 package fr.jdbc.models;
 
-import fr.jdbc.App;
-import fr.jdbc.utils.Logger;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Scanner;
+import javax.persistence.*;
+import java.util.*;
 
-public class Supply extends Model {
+@Entity
+public class Supply {
+    @Getter
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
     @Getter @Setter
-    private ArrayList<Product> products = new ArrayList<>();
+    @OneToMany(mappedBy = "supply", cascade = CascadeType.ALL)
+    private List<Product> products;
+
     @Getter @Setter
+    @OneToOne(cascade = CascadeType.ALL)
     private Supplier supplier;
+
     @Getter @Setter
     private float price;
 
     public Supply() {
-        super();
-    }
-
-    public Supply(HashMap<String, Object> data) {
         this.products = new ArrayList<>();
-        this.hydrate(data);
     }
 
-    @Override
-    protected void hydrate(HashMap<String, Object> data) {
-        this.setId(integer(data.get("id")));
-        for (String id : string(data.get("id_produits")).split(",")) {
-            this.products.add(App.getInstance().getProductDAO().findById(Integer.parseInt(id)));
-        }
-        this.setPrice(floatNumber(data.get("prix")));
-        this.setSupplier(App.getInstance().getSupplierDAO().findById(integer(data.get("id_fournisseur"))));
+    public Supply(Supplier supplier, float price) {
+        this.products = new ArrayList<>();
+        this.supplier = supplier;
+        this.price = price;
     }
 
     /**
-     *  Methode pour créer une fourniture initialisée à partir de saisie dans un terminal.
+     * Methode pour créer une fourniture initialisée à partir de saisie dans un terminal.
+     *
      * @return Fourniture initialisée
      */
-    public Supply initialize(){
+    /*
+    public Supply initialize() {
         Scanner scanner = new Scanner(System.in);
         String choice;
         String supplierName;
@@ -91,11 +88,11 @@ public class Supply extends Model {
         // Produits
         boolean stop = false;
         System.out.println("Si vous avez fini, entrez \"stop\".");
-        while(!stop) {
+        while (!stop) {
             App.getInstance().displayAllProducts();
             System.out.println("Entrez le nom du produit à ajouter: ");
             choice = scanner.nextLine();
-            if(choice.equalsIgnoreCase("stop")) {
+            if (choice.equalsIgnoreCase("stop")) {
                 stop = true;
             } else {
                 HashMap<String, Object> criteriasProd = new HashMap<>();
@@ -103,7 +100,7 @@ public class Supply extends Model {
                 if (App.getInstance().getProductDAO().find(criteriasProd) != null) {
                     Product product = App.getInstance().getProductDAO().find(criteriasProd);
                     this.products.add(product);
-                    if(!supplier.getProducts().contains(product)) supplier.getProducts().add(product);
+                    if (!supplier.getProducts().contains(product)) supplier.getProducts().add(product);
                 } else {
                     System.out.println("Wrong product name, please select a valid product.");
                     Logger.warning("Wrong product name in input.");
@@ -118,7 +115,7 @@ public class Supply extends Model {
 
         System.out.println("Fourniture terminée, confirmer l'enregistrement ? ");
         choice = scanner.nextLine();
-        if(choice.equalsIgnoreCase("oui") || choice.equals("yes")) {
+        if (choice.equalsIgnoreCase("oui") || choice.equals("yes")) {
             Logger.fine("Supply Saved in database.");
             this.save();
             System.out.println("Fourniture validée avec succès.");
@@ -133,11 +130,11 @@ public class Supply extends Model {
         return this;
     }
 
-    private void save(){
+    private void save() {
         App.getInstance().getSupplyDAO().save(this);
     }
 
-    private void reset(){
+    private void reset() {
         // Pour remettre les quantités disponibles si la commande est annulée.
         this.products = new ArrayList<>();
         this.price = 0;
@@ -155,7 +152,7 @@ public class Supply extends Model {
     }
 
     public ArrayList<ArrayList<Object>> displayContent(ArrayList<ArrayList<Object>> content) {
-        for(Product product : this.products) {
+        for (Product product : this.products) {
             ArrayList<Object> toAdd = new ArrayList<>();
             toAdd.add(this.getId());
             toAdd.add(product.getName());
@@ -165,4 +162,5 @@ public class Supply extends Model {
         }
         return content;
     }
+    */
 }

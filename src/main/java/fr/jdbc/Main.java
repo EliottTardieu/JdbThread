@@ -3,6 +3,9 @@ package fr.jdbc;
 import fr.jdbc.models.*;
 import fr.jdbc.utils.Logger;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -11,22 +14,25 @@ public class Main {
 
 
     public static void main(String[] args) {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("s7_hibernate");
+        EntityManager em = entityManagerFactory.createEntityManager();
 
+        /*
         System.out.println("\nBonjour, bienvenue sur votre interface de gestion.");
         Scanner scanner = new Scanner(System.in);
         String choice = "";
         while (!choice.equalsIgnoreCase("exit")) {
             System.out.println("1) Afficher la liste des clients\n"
-                             + "2) Afficher la liste des fournisseurs\n"
-                             + "3) Afficher la liste des fournitures\n"
-                             + "4) Afficher la liste des produits\n"
-                             + "5) Afficher la liste des commandes\n"
-                             + "6) Créer une commande\n"
-                             + "7) Créer une fourniture\n"
-                             + "8) Gérer les clients\n"
-                             + "9) Gérer les fournisseurs\n"
-                             + "10) Gérer les produits\n"
-                             + "Tapez exit si vous souhaitez sortir de l'interface");
+                    + "2) Afficher la liste des fournisseurs\n"
+                    + "3) Afficher la liste des fournitures\n"
+                    + "4) Afficher la liste des produits\n"
+                    + "5) Afficher la liste des commandes\n"
+                    + "6) Créer une commande\n"
+                    + "7) Créer une fourniture\n"
+                    + "8) Gérer les clients\n"
+                    + "9) Gérer les fournisseurs\n"
+                    + "10) Gérer les produits\n"
+                    + "Tapez exit si vous souhaitez sortir de l'interface");
             choice = scanner.nextLine();
             switch (choice) {
                 case "1":
@@ -59,9 +65,9 @@ public class Main {
 
                 case "8":
                     System.out.println("\t1) Ajouter un client\n"
-                                     + "\t2) Modifier un client\n"
-                                     + "\t3) Ajouter une reduction\n"
-                                     + "\t4) Supprimer un client");
+                            + "\t2) Modifier un client\n"
+                            + "\t3) Ajouter une reduction\n"
+                            + "\t4) Supprimer un client");
                     String clientChoice = scanner.nextLine();
                     switch (clientChoice) {
                         case "1":
@@ -77,7 +83,7 @@ public class Main {
                             if (App.getInstance().getClientDAO().find(criteriasModifiedClient) != null) {
                                 Client modifiedClient = App.getInstance().getClientDAO().find(criteriasModifiedClient);
                                 System.out.println("\t1) Modifier le nom\n"
-                                                 + "\t2) Modifier le prénom");
+                                        + "\t2) Modifier le prénom");
                                 String modifyClient = scanner.nextLine();
                                 switch (modifyClient) {
                                     case "1":
@@ -112,7 +118,7 @@ public class Main {
                                 scanner.nextLine();
                                 client.setDiscount(reduction);
                                 App.getInstance().getClientDAO().save(client);
-                                System.out.println("Reduction bien appliquée à "+ client.getName()+"\n");
+                                System.out.println("Reduction bien appliquée à " + client.getName() + "\n");
                                 Logger.fine("Client reduction applied.");
                             } else {
                                 Logger.severe("Unable to find client.");
@@ -138,8 +144,8 @@ public class Main {
 
                 case "9":
                     System.out.println("\t1) Ajouter un fournisseur\n"
-                                     + "\t2) Modifier un fournisseur\n"
-                                     + "\t3) Supprimer un fournisseur");
+                            + "\t2) Modifier un fournisseur\n"
+                            + "\t3) Supprimer un fournisseur");
                     String supplierChoice = scanner.nextLine();
                     switch (supplierChoice) {
                         case "1":
@@ -155,7 +161,7 @@ public class Main {
                             if (App.getInstance().getSupplierDAO().find(criteriasModifiedSupplier) != null) {
                                 Supplier modifiedSupplier = App.getInstance().getSupplierDAO().find(criteriasModifiedSupplier);
                                 System.out.println("\t1) Modifier le nom\n"
-                                                 + "\t2) Modifier le prénom");
+                                        + "\t2) Modifier le prénom");
                                 String modifySupplier = scanner.nextLine();
                                 switch (modifySupplier) {
                                     case "1":
@@ -193,8 +199,8 @@ public class Main {
 
                 case "10":
                     System.out.println("\t1) Ajouter un produit\n"
-                                     + "\t2) Modifier un produit\n"
-                                     + "\t3) Supprimer un produit");
+                            + "\t2) Modifier un produit\n"
+                            + "\t3) Supprimer un produit");
                     String productChoice = scanner.nextLine();
                     switch (productChoice) {
                         case "1":
@@ -210,8 +216,8 @@ public class Main {
                             if (App.getInstance().getProductDAO().find(criteriasModifiedProduct) != null) {
                                 Product modifiedProduct = App.getInstance().getProductDAO().find(criteriasModifiedProduct);
                                 System.out.println("\t1) Modifier le nom\n"
-                                                 + "\t2) Modifier le prix unitaire\n"
-                                                 + "\t3) Modifier la quantité en stock");
+                                        + "\t2) Modifier le prix unitaire\n"
+                                        + "\t3) Modifier la quantité en stock");
                                 String modifyObject = scanner.nextLine();
                                 switch (modifyObject) {
                                     case "1":
@@ -219,7 +225,7 @@ public class Main {
                                         String newNameProduct = scanner.nextLine();
                                         modifiedProduct.setName(newNameProduct);
                                         App.getInstance().getProductDAO().save(modifiedProduct);
-                                        System.out.println("Le nom du produit a bien été modifié");
+                                        System.out.println("Le nom du produit a bien été modifié\n");
                                         break;
 
                                     case "2":
@@ -227,7 +233,7 @@ public class Main {
                                         String newPriceProduct = scanner.nextLine();
                                         modifiedProduct.setUnitPrice(Float.parseFloat(newPriceProduct));
                                         App.getInstance().getProductDAO().save(modifiedProduct);
-                                        System.out.println("Le prix du produit a bien été modifié");
+                                        System.out.println("Le prix du produit a bien été modifié\n");
                                         break;
 
                                     case "3":
@@ -235,7 +241,7 @@ public class Main {
                                         String newQuantityProduct = scanner.nextLine();
                                         modifiedProduct.setAvailableQuantity(Integer.parseInt(newQuantityProduct));
                                         App.getInstance().getProductDAO().save(modifiedProduct);
-                                        System.out.println("La quantité en stock du produit a bien été modifié");
+                                        System.out.println("La quantité en stock du produit a bien été modifié\n");
                                         break;
                                 }
                             } else {
@@ -248,7 +254,7 @@ public class Main {
                             System.out.println("Entrez le nom du produit que vous voulez supprimer: (stop pour annuler)");
                             App.getInstance().displayAllProducts();
                             String removedProductName = scanner.nextLine();
-                            if(!removedProductName.equalsIgnoreCase("stop")){
+                            if (!removedProductName.equalsIgnoreCase("stop")) {
                                 HashMap<String, Object> criteriasProduct = new HashMap<>();
                                 criteriasProduct.put("nom", removedProductName);
                                 if (App.getInstance().getProductDAO().find(criteriasProduct) != null) {
@@ -262,6 +268,9 @@ public class Main {
             }
 
         }
+        */
         System.exit(0);
+        em.close();
+        entityManagerFactory.close();
     }
 }
