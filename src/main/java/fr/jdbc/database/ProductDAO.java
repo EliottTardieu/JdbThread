@@ -38,11 +38,11 @@ public class ProductDAO {
     }
 
     public List<Product> getAll(EntityManager em) {
-        return em.createQuery("from product").getResultList();
+        return em.createQuery("from Product").getResultList();
     }
 
     public List<Product> getByCategory(EntityManager em, String category) {
-        Query query = em.createQuery("from product where category = :category");
+        Query query = em.createQuery("from Product where category = :category");
         query.setParameter("category", category);
         return query.getResultList();
     }

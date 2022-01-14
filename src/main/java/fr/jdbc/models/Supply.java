@@ -140,27 +140,5 @@ public class Supply {
         this.price = 0;
         this.supplier = null;
     }
-
-    public ArrayList<ArrayList<Object>> display(ArrayList<ArrayList<Object>> data) {
-        ArrayList<Object> toAdd = new ArrayList<>();
-        toAdd.add(this.getId());
-        toAdd.add(this.getSupplier().getName());
-        toAdd.add(this.getSupplier().getForename());
-        toAdd.add(this.getPrice());
-        data.add(toAdd);
-        return data;
-    }
-
-    public ArrayList<ArrayList<Object>> displayContent(ArrayList<ArrayList<Object>> content) {
-        for (Product product : this.products) {
-            ArrayList<Object> toAdd = new ArrayList<>();
-            toAdd.add(this.getId());
-            toAdd.add(product.getName());
-            toAdd.add(product.getCategory());
-            toAdd.add(product.getUnitPrice());
-            content.add(toAdd);
-        }
-        return content;
-    }
     */
 }

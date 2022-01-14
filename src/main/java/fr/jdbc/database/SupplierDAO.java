@@ -40,6 +40,6 @@ public class SupplierDAO {
     }
 
     public List<Supplier> getAll(EntityManager em) {
-        return em.createQuery("from supplier").getResultList();
+        return em.createQuery("from Supplier").getResultList();
     }
 }

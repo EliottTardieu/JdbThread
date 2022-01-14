@@ -12,12 +12,9 @@ import java.util.Scanner;
 
 public class Main {
 
-
     public static void main(String[] args) {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("s7_hibernate");
-        EntityManager em = entityManagerFactory.createEntityManager();
 
-        /*
+
         System.out.println("\nBonjour, bienvenue sur votre interface de gestion.");
         Scanner scanner = new Scanner(System.in);
         String choice = "";
@@ -36,25 +33,25 @@ public class Main {
             choice = scanner.nextLine();
             switch (choice) {
                 case "1":
-                    App.getInstance().displayAllClients();
+                    App.getInstance().getClientView().displayAllClients();
                     break;
 
                 case "2":
-                    App.getInstance().displayAllSuppliers();
+                    App.getInstance().getSupplierView().displayAllSuppliers();
                     break;
 
                 case "3":
-                    App.getInstance().displayAllSupplies();
+                    App.getInstance().getSupplyView().displayAllSupplies();
                     break;
 
                 case "4":
-                    App.getInstance().displayAllProducts();
+                    App.getInstance().getProductView().displayAllProducts();
                     break;
 
                 case "5":
-                    App.getInstance().displayAllOrders();
+                    App.getInstance().getOrderingView().displayAllOrders();
                     break;
-
+                /*
                 case "6":
                     Order currentOrder = new Order().initialize();
                     break;
@@ -264,13 +261,13 @@ public class Main {
                             }
                     }
 
-                    break;
+                    break;*/
             }
 
         }
-        */
+
         System.exit(0);
-        em.close();
-        entityManagerFactory.close();
+        App.getInstance().getEm().close();
+        App.getInstance().getEntityManagerFactory().close();
     }
 }

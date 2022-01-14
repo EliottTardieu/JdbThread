@@ -107,24 +107,4 @@ public class Product {
         return this;
     }
     */
-    /**
-     * Stocke les informations d'un produit dans une liste, qui est elle-même mise
-     * dans la liste de tous les produits.
-     *
-     * @param data La liste de tous les produits que l'on met à jour à chaque appel.
-     * @return La liste des produits mise à jour.
-     */
-    /*
-    public ArrayList<ArrayList<Object>> display(ArrayList<ArrayList<Object>> data) {
-        ArrayList<Object> toAdd = new ArrayList<>();
-        toAdd.add(this.getId());
-        toAdd.add(this.getName());
-        toAdd.add(this.getCategory());
-        toAdd.add(this.getSpecies());
-        toAdd.add(this.getUnitPrice());
-        toAdd.add(this.getAvailableQuantity());
-        data.add(toAdd);
-        return data;
-    }
-    */
 }

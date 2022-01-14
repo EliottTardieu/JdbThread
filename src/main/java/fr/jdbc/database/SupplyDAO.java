@@ -27,11 +27,11 @@ public class SupplyDAO {
     }
 
     public List<Supply> getAll(EntityManager em) {
-        return em.createQuery("from supply").getResultList();
+        return em.createQuery("from Supply").getResultList();
     }
 
     public List<Supply> getBySupplier(EntityManager em, Supplier supplier) {
-        Query query = em.createQuery("from supply where supplier = :supplier");
+        Query query = em.createQuery("from Supply where supplier = :supplier");
         query.setParameter("supplier", supplier);
         return query.getResultList();
     }

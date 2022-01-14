@@ -34,11 +34,11 @@ public class OrderingDAO {
     }
 
     public List<Ordering> getAll(EntityManager em) {
-        return em.createQuery("from ordering").getResultList();
+        return em.createQuery("from Ordering").getResultList();
     }
 
     public List<Ordering> getByClientName(EntityManager em, Client client) {
-        Query query = em.createQuery("from ordering where client.name = :name");
+        Query query = em.createQuery("from Ordering where client.name = :name");
         query.setParameter("name", client.getName());
         return query.getResultList();
     }

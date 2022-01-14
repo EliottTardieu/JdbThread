@@ -1,11 +1,7 @@
 package fr.jdbc.database;
 
 import fr.jdbc.models.Client;
-import fr.jdbc.models.FullAddress;
-
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import java.util.HashMap;
 import java.util.List;
 
 public class ClientDAO {

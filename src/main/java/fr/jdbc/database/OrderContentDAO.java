@@ -3,6 +3,7 @@ package fr.jdbc.database;
 import fr.jdbc.models.OrderContent;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 
 public class OrderContentDAO {
 
@@ -26,5 +27,9 @@ public class OrderContentDAO {
         em.getTransaction().begin();
         em.remove(orderContent);
         em.getTransaction().commit();
+    }
+
+    public List<OrderContent> getAll(EntityManager em) {
+        return em.createQuery("from OrderContent").getResultList();
     }
 }
