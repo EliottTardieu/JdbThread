@@ -2,6 +2,7 @@ package fr.jdbc.controllers;
 
 import fr.jdbc.App;
 import fr.jdbc.database.SupplyDAO;
+import fr.jdbc.models.Product;
 import fr.jdbc.models.Supplier;
 import fr.jdbc.models.Supply;
 
@@ -13,8 +14,8 @@ public class SupplyController {
 
     }
 
-    public Supply createSupply(EntityManager em, Supplier supplier, float price) {
-        Supply supply = new Supply(supplier, price);
+    public Supply createSupply(EntityManager em, Supplier supplier, float price, ArrayList<Product> products) {
+        Supply supply = new Supply(supplier, price, products);
         supplier.setSupply(supply);
 
         App.getInstance().getSupplyDAO().save(em, supply);

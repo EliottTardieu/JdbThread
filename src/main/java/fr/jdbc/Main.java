@@ -56,9 +56,9 @@ public class Main {
                 case "6":
                     App.getInstance().getOrderingView().initialize(entityManager);
                     break;
-                /*
+
                 case "7":
-                    Supply currentSupply = new Supply().initialize();
+                    App.getInstance().getSupplyView().initialize(entityManager);
                     break;
 
                 case "8":
@@ -69,30 +69,28 @@ public class Main {
                     String clientChoice = scanner.nextLine();
                     switch (clientChoice) {
                         case "1":
-                            Client currentClient = new Client().initialize();
+                            App.getInstance().getClientView().initialize(entityManager);
                             break;
 
                         case "2":
                             System.out.println("Entrez le nom du client que vous voulez modifier: ");
-                            App.getInstance().displayAllClients();
+                            App.getInstance().getClientView().displayAllClients(entityManager);
                             String modifiedClientSc = scanner.nextLine();
                             HashMap<String, Object> criteriasModifiedClient = new HashMap<>();
-                            criteriasModifiedClient.put("nom", modifiedClientSc);
-                            if (App.getInstance().getClientDAO().find(criteriasModifiedClient) != null) {
-                                Client modifiedClient = App.getInstance().getClientDAO().find(criteriasModifiedClient);
+                            criteriasModifiedClient.put("name", modifiedClientSc);
+                            if (App.getInstance().getClientDAO().findByName(entityManager, criteriasModifiedClient) != null) {
+                                Client modifiedClient = App.getInstance().getClientDAO().findByName(entityManager, criteriasModifiedClient);
                                 System.out.println("\t1) Modifier le nom\n"
                                         + "\t2) Modifier le prénom");
                                 String modifyClient = scanner.nextLine();
                                 switch (modifyClient) {
                                     case "1":
                                         System.out.println("Entrez le nouveau Nom du client: ");
-                                        modifiedClient.setName(scanner.nextLine());
-                                        App.getInstance().getClientDAO().save(modifiedClient);
+                                        App.getInstance().getClientController().updateName(entityManager, modifiedClient, scanner.nextLine());
                                         break;
                                     case "2":
                                         System.out.println("Entrez le nouveau Prénom du client: ");
-                                        modifiedClient.setForename(scanner.nextLine());
-                                        App.getInstance().getClientDAO().save(modifiedClient);
+                                        App.getInstance().getClientController().updateForename(entityManager, modifiedClient, scanner.nextLine());
                                         break;
                                 }
                             } else {
@@ -101,21 +99,19 @@ public class Main {
                             break;
 
                         case "3":
-                            App.getInstance().displayAllClients();
+                            App.getInstance().getClientView().displayAllClients(entityManager);
                             System.out.println("Entrez le nom du client: ");
                             String clientName = scanner.nextLine();
                             System.out.println("Entrez le prénom du client: ");
                             String clientForename = scanner.nextLine();
                             HashMap<String, Object> criteriasClientR = new HashMap<>();
-                            criteriasClientR.put("nom", clientName);
-                            criteriasClientR.put("prenom", clientForename);
-                            if (App.getInstance().getClientDAO().find(criteriasClientR) != null) {
-                                Client client = App.getInstance().getClientDAO().find(criteriasClientR);
+                            criteriasClientR.put("name", clientName);
+                            if (App.getInstance().getClientDAO().findByName(entityManager, criteriasClientR) != null) {
+                                Client client = App.getInstance().getClientDAO().findByName(entityManager, criteriasClientR);
                                 System.out.println("Entrez le montant de la réduction: ");
                                 int reduction = scanner.nextInt();
                                 scanner.nextLine();
-                                client.setDiscount(reduction);
-                                App.getInstance().getClientDAO().save(client);
+                                App.getInstance().getClientController().addDiscount(entityManager, client, reduction);
                                 System.out.println("Reduction bien appliquée à " + client.getName() + "\n");
                                 Logger.fine("Client reduction applied.");
                             } else {
@@ -124,13 +120,14 @@ public class Main {
                             break;
 
                         case "4":
+                            // TODO: Supprimer le client et les informations le concernant
                             System.out.println("Entrez le nom du client que vous voulez supprimer: ");
-                            App.getInstance().displayAllClients();
+                            App.getInstance().getClientView().displayAllClients(entityManager);
                             String removedClientName = scanner.nextLine();
                             HashMap<String, Object> criteriasClient = new HashMap<>();
-                            criteriasClient.put("nom", removedClientName);
-                            if (App.getInstance().getClientDAO().find(criteriasClient) != null) {
-                                App.getInstance().getClientDAO().delete(App.getInstance().getClientDAO().find(criteriasClient));
+                            criteriasClient.put("name", removedClientName);
+                            if (App.getInstance().getClientDAO().findByName(entityManager, criteriasClient) != null) {
+                                App.getInstance().getClientController().deleteClient(entityManager, App.getInstance().getClientDAO().findByName(entityManager, criteriasClient));
                                 System.out.println("Client bien supprimé\n");
                                 Logger.fine("Client removed.");
                             } else {
@@ -147,30 +144,28 @@ public class Main {
                     String supplierChoice = scanner.nextLine();
                     switch (supplierChoice) {
                         case "1":
-                            Supplier supplier = new Supplier().initialize();
+                            App.getInstance().getSupplierView().initialize(entityManager);
                             break;
 
                         case "2":
                             System.out.println("Entrez le nom du fournisseur que vous voulez modifier: ");
-                            App.getInstance().displayAllSuppliers();
+                            App.getInstance().getSupplierView().displayAllSuppliers(entityManager);
                             String modifiedSupplierSc = scanner.nextLine();
                             HashMap<String, Object> criteriasModifiedSupplier = new HashMap<>();
-                            criteriasModifiedSupplier.put("nom", modifiedSupplierSc);
-                            if (App.getInstance().getSupplierDAO().find(criteriasModifiedSupplier) != null) {
-                                Supplier modifiedSupplier = App.getInstance().getSupplierDAO().find(criteriasModifiedSupplier);
+                            criteriasModifiedSupplier.put("name", modifiedSupplierSc);
+                            if (App.getInstance().getSupplierDAO().findByName(entityManager, criteriasModifiedSupplier) != null) {
+                                Supplier modifiedSupplier = App.getInstance().getSupplierDAO().findByName(entityManager, criteriasModifiedSupplier);
                                 System.out.println("\t1) Modifier le nom\n"
                                         + "\t2) Modifier le prénom");
                                 String modifySupplier = scanner.nextLine();
                                 switch (modifySupplier) {
                                     case "1":
                                         System.out.println("Entrez le nouveau Nom du fournisseur: ");
-                                        modifiedSupplier.setName(scanner.nextLine());
-                                        App.getInstance().getSupplierDAO().save(modifiedSupplier);
+                                        App.getInstance().getSupplierController().updateName(entityManager, modifiedSupplier, scanner.nextLine());
                                         break;
                                     case "2":
                                         System.out.println("Entrez le nouveau Prénom du fournisseur: ");
-                                        modifiedSupplier.setForename(scanner.nextLine());
-                                        App.getInstance().getSupplierDAO().save(modifiedSupplier);
+                                        App.getInstance().getSupplierController().updateForename(entityManager, modifiedSupplier, scanner.nextLine());
                                         break;
                                 }
                             } else {
@@ -179,13 +174,14 @@ public class Main {
                             break;
 
                         case "3":
+                            // TODO: Supprimer les bonnes infos
                             System.out.println("Entrez le nom du fournisseur que vous voulez supprimer: ");
-                            App.getInstance().displayAllSuppliers();
+                            App.getInstance().getSupplierView().displayAllSuppliers(entityManager);
                             String removedSupplierName = scanner.nextLine();
                             HashMap<String, Object> criteriasSupplier = new HashMap<>();
-                            criteriasSupplier.put("nom", removedSupplierName);
-                            if (App.getInstance().getSupplierDAO().find(criteriasSupplier) != null) {
-                                App.getInstance().getSupplierDAO().delete(App.getInstance().getSupplierDAO().find(criteriasSupplier));
+                            criteriasSupplier.put("name", removedSupplierName);
+                            if (App.getInstance().getSupplierDAO().findByName(entityManager, criteriasSupplier) != null) {
+                                App.getInstance().getSupplierController().deleteSupplier(entityManager, App.getInstance().getSupplierDAO().find(entityManager, criteriasSupplier));
                                 System.out.println("Fournisseur bien supprimé\n");
                                 Logger.fine("Supplier removed.");
                             } else {
@@ -202,17 +198,17 @@ public class Main {
                     String productChoice = scanner.nextLine();
                     switch (productChoice) {
                         case "1":
-                            Product currentProduct = new Product().initialize();
+                            App.getInstance().getProductView().initialize(entityManager);
                             break;
 
                         case "2":
                             System.out.println("Entrez le nom du produit que vous voulez modifier: ");
-                            App.getInstance().displayAllProducts();
+                            App.getInstance().getProductView().displayAllProducts(entityManager);
                             String modifiedProductName = scanner.nextLine();
                             HashMap<String, Object> criteriasModifiedProduct = new HashMap<>();
-                            criteriasModifiedProduct.put("nom", modifiedProductName);
-                            if (App.getInstance().getProductDAO().find(criteriasModifiedProduct) != null) {
-                                Product modifiedProduct = App.getInstance().getProductDAO().find(criteriasModifiedProduct);
+                            criteriasModifiedProduct.put("name", modifiedProductName);
+                            if (App.getInstance().getProductDAO().findByName(entityManager, criteriasModifiedProduct) != null) {
+                                Product modifiedProduct = App.getInstance().getProductDAO().findByName(entityManager, criteriasModifiedProduct);
                                 System.out.println("\t1) Modifier le nom\n"
                                         + "\t2) Modifier le prix unitaire\n"
                                         + "\t3) Modifier la quantité en stock");
@@ -221,24 +217,21 @@ public class Main {
                                     case "1":
                                         System.out.println("Entrer le nouveau nom: ");
                                         String newNameProduct = scanner.nextLine();
-                                        modifiedProduct.setName(newNameProduct);
-                                        App.getInstance().getProductDAO().save(modifiedProduct);
+                                        App.getInstance().getProductController().updateName(entityManager, modifiedProduct, newNameProduct);
                                         System.out.println("Le nom du produit a bien été modifié\n");
                                         break;
 
                                     case "2":
                                         System.out.println("Entrer le nouveau prix: ");
                                         String newPriceProduct = scanner.nextLine();
-                                        modifiedProduct.setUnitPrice(Float.parseFloat(newPriceProduct));
-                                        App.getInstance().getProductDAO().save(modifiedProduct);
+                                        App.getInstance().getProductController().updatePrice(entityManager, modifiedProduct, Float.parseFloat(newPriceProduct));
                                         System.out.println("Le prix du produit a bien été modifié\n");
                                         break;
 
                                     case "3":
                                         System.out.println("Entrer la nouvelle quantité en stock: ");
                                         String newQuantityProduct = scanner.nextLine();
-                                        modifiedProduct.setAvailableQuantity(Integer.parseInt(newQuantityProduct));
-                                        App.getInstance().getProductDAO().save(modifiedProduct);
+                                        App.getInstance().getProductController().updateQuantity(entityManager, modifiedProduct, Integer.parseInt(newQuantityProduct));
                                         System.out.println("La quantité en stock du produit a bien été modifié\n");
                                         break;
                                 }
@@ -248,23 +241,22 @@ public class Main {
                             break;
 
                         case "3":
-                            System.out.println("ATTENTION: Les produits que vous allez supprimer ici pourront impacter le reste de l'application, à n'utiliser qu'en connaissance de cause.");
+                            // TODO: Supprimer les bonnes infos
+                            //System.out.println("ATTENTION: Les produits que vous allez supprimer ici pourront impacter le reste de l'application, à n'utiliser qu'en connaissance de cause.");
                             System.out.println("Entrez le nom du produit que vous voulez supprimer: (stop pour annuler)");
-                            App.getInstance().displayAllProducts();
+                            App.getInstance().getProductView().displayAllProducts(entityManager);
                             String removedProductName = scanner.nextLine();
                             if (!removedProductName.equalsIgnoreCase("stop")) {
                                 HashMap<String, Object> criteriasProduct = new HashMap<>();
-                                criteriasProduct.put("nom", removedProductName);
-                                if (App.getInstance().getProductDAO().find(criteriasProduct) != null) {
-                                    App.getInstance().getProductDAO().delete(App.getInstance().getProductDAO().find(criteriasProduct));
+                                criteriasProduct.put("name", removedProductName);
+                                if (App.getInstance().getProductDAO().findByName(entityManager, criteriasProduct) != null) {
+                                    App.getInstance().getProductController().deleteProduct(entityManager, App.getInstance().getProductDAO().findByName(entityManager, criteriasProduct));
                                     System.out.println("Produit bien supprimé\n");
                                 }
                             }
                     }
-
-                    break;*/
+                    break;
             }
-
         }
 
         System.exit(0);

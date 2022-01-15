@@ -87,4 +87,28 @@ public class ClientDAO {
             return null;
         }
     }
+
+    /**
+     * Méthode pour trouver un client ayant le nom passé en paramètre
+     */
+    public Client findByName(EntityManager em, HashMap<String, Object> criterias) {
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<Client> criteriaQuery = criteriaBuilder.createQuery(Client.class);
+        Root<Client> clientRoot = criteriaQuery.from(Client.class);
+
+        Predicate predicateForName = null;
+
+        for (Map.Entry<String, Object> entry : criterias.entrySet()) {
+            if (entry.getKey().equalsIgnoreCase("name")) {
+                predicateForName = criteriaBuilder.equal(clientRoot.get("name"), entry.getValue());
+            }
+        }
+
+        criteriaQuery.where(predicateForName);
+        try {
+            return em.createQuery(criteriaQuery).getSingleResult();
+        } catch (NullPointerException | NoResultException e) {
+            return null;
+        }
+    }
 }

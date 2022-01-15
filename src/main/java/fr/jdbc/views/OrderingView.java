@@ -71,6 +71,7 @@ public class OrderingView {
         String choice;
         Ordering ordering = new Ordering();
         Set<OrderContent> orderContentSet = new HashSet<>();
+        HashMap<Product, Integer> backupQuantity = new HashMap<>();
         Client client;
         String clientName;
         String clientForename;
@@ -114,10 +115,9 @@ public class OrderingView {
         // Produits et Quantités
         boolean stop = false;
         System.out.println("Si vous avez fini, entrez \"stop\".");
-        /*
-        for (Product product : App.getInstance().getProductDAO().getAll()) {
-            this.backupQuantity.put(product, product.getAvailableQuantity());
-        }*/
+        for (Product product : App.getInstance().getProductDAO().getAll(em)) {
+            backupQuantity.put(product, product.getAvailableQuantity());
+        }
         while (!stop) {
             App.getInstance().getProductView().displayAllProducts(em);
             System.out.println("Entrez le nom du produit à ajouter: ");
@@ -157,11 +157,19 @@ public class OrderingView {
             System.out.println("Commande validée avec succès.");
         } else if (choice.equalsIgnoreCase("non") || choice.equalsIgnoreCase("no")) {
             Logger.warning("Order not saved, the content has been reset.");
-            //this.reset();
+            for (Product product : backupQuantity.keySet()) {
+                product.setAvailableQuantity(backupQuantity.get(product));
+                App.getInstance().getProductDAO().save(em, product);
+            }
+            // TODO: Supprimer les lignes de la commande
             System.out.println("Commande annulée avec succès.");
         } else {
             Logger.severe("Unknown answer, order was reset by default.");
-            //this.reset();
+            for (Product product : backupQuantity.keySet()) {
+                product.setAvailableQuantity(backupQuantity.get(product));
+                App.getInstance().getProductDAO().save(em, product);
+            }
+            // TODO: Supprimer les lignes de la commande
         }
         return ordering;
     }

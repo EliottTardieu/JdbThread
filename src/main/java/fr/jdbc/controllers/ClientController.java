@@ -27,6 +27,11 @@ public class ClientController {
         }
     }
 
+    public void addDiscount(EntityManager em, Client client, int discount) {
+        client.setDiscount(discount);
+        App.getInstance().getClientDAO().save(em, client);
+    }
+
     public void updateName(EntityManager em, Client client, String newName) {
         App.getInstance().getClientDAO().updateName(em, client, newName);
     }

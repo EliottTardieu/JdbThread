@@ -2,11 +2,21 @@ package fr.jdbc.views;
 
 import dnl.utils.text.table.TextTable;
 import fr.jdbc.App;
+import fr.jdbc.models.Client;
+import fr.jdbc.models.FullAddress;
 import fr.jdbc.models.Product;
 import fr.jdbc.models.Supplier;
+import fr.jdbc.utils.Logger;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class SupplierView {
@@ -59,5 +69,67 @@ public class SupplierView {
             supplierTable.printTable();
         }
         System.out.println("");
+    }
+
+    /**
+     * Methode pour créer un fournisseur initialisé à partir de saisie dans un terminal.
+     *
+     * @return Fournisseur initialisée
+     */
+    public Supplier initialize(EntityManager em) {
+        Scanner scanner = new Scanner(System.in);
+        String choice;
+        String supplierAddress;
+        String supplierCity;
+        FullAddress fullAddress;
+        String name;
+        String forename;
+        ArrayList<Product> products = new ArrayList<>();
+
+        // Adresse du fournisseur
+        System.out.println("Entrez l'adresse du fournisseur: ");
+        supplierAddress = scanner.nextLine();
+        System.out.println("Entrez la ville du fournisseur: ");
+        supplierCity = scanner.nextLine();
+        HashMap<String, Object> criteriasAdd = new HashMap<>();
+        criteriasAdd.put("address", supplierAddress);
+        criteriasAdd.put("city", supplierCity);
+        if (App.getInstance().getFullAddressDAO().findByFullAddress(em, criteriasAdd) != null) {
+            fullAddress = App.getInstance().getFullAddressDAO().findByFullAddress(em, criteriasAdd);
+            Logger.fine("Supplier address found.");
+        } else {
+            fullAddress = App.getInstance().getFullAddressController().createFullAddress(em, supplierAddress, supplierCity);
+            Logger.warning("Supplier address unknown, added to database.");
+        }
+
+        // Nom et prénom
+        System.out.println("Entrez le nom: ");
+        name = scanner.nextLine();
+        System.out.println("Entrez le prénom: ");
+        forename = scanner.nextLine();
+
+        // Produits
+        boolean stop = false;
+        System.out.println("Si vous avez fini, entrez \"stop\".");
+        while (!stop) {
+            App.getInstance().getProductView().displayAllProducts(em);
+            System.out.println("Entrez le nom du produit à ajouter: ");
+            choice = scanner.nextLine();
+            if (choice.equalsIgnoreCase("stop")) {
+                stop = true;
+            } else {
+                HashMap<String, Object> criteriasProd = new HashMap<>();
+                criteriasProd.put("name", choice);
+                if (App.getInstance().getProductDAO().findByName(em, criteriasProd) != null) {
+                    Product product = App.getInstance().getProductDAO().findByName(em, criteriasProd);
+                    products.add(product);
+                } else {
+                    System.out.println("Wrong product name, please select a valid product.");
+                    Logger.warning("Wrong product name in input.");
+                }
+            }
+        }
+
+        return App.getInstance().getSupplierController().createSupplier(em, name, forename, fullAddress);
     }
 }
