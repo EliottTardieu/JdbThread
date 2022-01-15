@@ -9,6 +9,10 @@ import javax.persistence.EntityManager;
 import java.util.ArrayList;
 
 public class SupplyController {
+    public SupplyController() {
+
+    }
+
     public Supply createSupply(EntityManager em, Supplier supplier, float price) {
         Supply supply = new Supply(supplier, price);
         supplier.setSupply(supply);

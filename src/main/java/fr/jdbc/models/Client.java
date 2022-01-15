@@ -22,6 +22,7 @@ public class Client {
     private FullAddress address;
 
     @Getter @Setter
+    @Column(nullable = true)
     private int discount;
 
     @Getter @Setter
@@ -32,11 +33,11 @@ public class Client {
 
     }
 
-    public Client(String name, String forename, FullAddress address, int discount) {
+    public Client(String name, String forename, int discount, FullAddress address) {
         this.name = name;
         this.forename = forename;
-        this.address = address;
         this.discount = discount;
+        this.address = address;
     }
 
     /**

@@ -10,8 +10,12 @@ import java.util.ArrayList;
 
 public class ClientController {
 
-    public Client createClient(EntityManager em, String name, String forename, FullAddress address, int discount) {
-        Client client = new Client(name, forename, address, discount);
+    public ClientController() {
+
+    }
+
+    public Client createClient(EntityManager em, String name, String forename, int discount, FullAddress address) {
+        Client client = new Client(name, forename, discount, address);
         address.setClient(client);
 
         App.getInstance().getClientDAO().save(em, client);

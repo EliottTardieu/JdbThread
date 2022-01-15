@@ -4,6 +4,7 @@ import dnl.utils.text.table.TextTable;
 import fr.jdbc.App;
 import fr.jdbc.models.Product;
 
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 
 public class ProductView {
@@ -13,10 +14,10 @@ public class ProductView {
     /**
      * Affiche la liste de tous les produits
      */
-    public void displayAllProducts() {
-        String[] columnsProducts = {"Id", "Nom", "Catégorie", "Espèce", "Prix Unitaire", "Stock Disponible"};
+    public void displayAllProducts(EntityManager em) {
+        String[] columnsProducts = {"Id", "Nom", "Catégorie", "Espèce", "Prix Unitaire (HT)", "Stock Disponible"};
         ArrayList<ArrayList<Object>> dataProducts = new ArrayList<>();
-        for (Product product : App.getInstance().getProductDAO().getAll(App.getInstance().getEm())) {
+        for (Product product : App.getInstance().getProductDAO().getAll(em)) {
             ArrayList<Object> toAdd = new ArrayList<>();
             toAdd.add(product.getId());
             toAdd.add(product.getName());

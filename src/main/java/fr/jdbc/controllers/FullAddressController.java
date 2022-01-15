@@ -8,6 +8,10 @@ import javax.persistence.EntityManager;
 import java.util.ArrayList;
 
 public class FullAddressController {
+    public FullAddressController() {
+
+    }
+
     public FullAddress createFullAddress(EntityManager em, String address, String city) {
         FullAddress fullAddress = new FullAddress(address, city);
 

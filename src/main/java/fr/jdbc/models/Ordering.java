@@ -24,16 +24,14 @@ public class Ordering {
     @OneToMany(mappedBy = "ordering", cascade = CascadeType.ALL)
     private Set<OrderContent> orderContents;
 
-    //private HashMap<Product, Integer> backupQuantity = new HashMap<>();
-
     public Ordering() {
         this.orderContents = new HashSet<>();
     }
 
-    public Ordering(float price, Client client) {
-        this.orderContents = new HashSet<>();
+    public Ordering(float price, Client client, Set<OrderContent> orderContents) {
         this.price = price;
         this.client = client;
+        this.orderContents = orderContents;
     }
     /*
     private void save() {
@@ -42,18 +40,5 @@ public class Ordering {
         }
         this.backupQuantity.clear();
         App.getInstance().getOrderDAO().save(this);
-    }
-
-    private void reset() {
-        // Pour remettre les quantités disponibles si la commande est annulée.
-        for (Product product : backupQuantity.keySet()) {
-            product.setAvailableQuantity(backupQuantity.get(product));
-            App.getInstance().getProductDAO().save(product);
-        }
-        this.products = new LinkedList<>();
-        this.quantityProduct = new LinkedList<>();
-        this.price = 0;
-        this.client = null;
-    }
-    */
+    }*/
 }

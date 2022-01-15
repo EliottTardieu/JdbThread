@@ -1,5 +1,6 @@
 package fr.jdbc.database;
 
+import fr.jdbc.App;
 import fr.jdbc.models.OrderContent;
 
 import javax.persistence.EntityManager;

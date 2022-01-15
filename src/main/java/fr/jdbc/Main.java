@@ -13,7 +13,8 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("s7_hibernate");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         System.out.println("\nBonjour, bienvenue sur votre interface de gestion.");
         Scanner scanner = new Scanner(System.in);
@@ -33,29 +34,29 @@ public class Main {
             choice = scanner.nextLine();
             switch (choice) {
                 case "1":
-                    App.getInstance().getClientView().displayAllClients();
+                    App.getInstance().getClientView().displayAllClients(entityManager);
                     break;
 
                 case "2":
-                    App.getInstance().getSupplierView().displayAllSuppliers();
+                    App.getInstance().getSupplierView().displayAllSuppliers(entityManager);
                     break;
 
                 case "3":
-                    App.getInstance().getSupplyView().displayAllSupplies();
+                    App.getInstance().getSupplyView().displayAllSupplies(entityManager);
                     break;
 
                 case "4":
-                    App.getInstance().getProductView().displayAllProducts();
+                    App.getInstance().getProductView().displayAllProducts(entityManager);
                     break;
 
                 case "5":
-                    App.getInstance().getOrderingView().displayAllOrders();
-                    break;
-                /*
-                case "6":
-                    Order currentOrder = new Order().initialize();
+                    App.getInstance().getOrderingView().displayAllOrders(entityManager);
                     break;
 
+                case "6":
+                    App.getInstance().getOrderingView().initialize(entityManager);
+                    break;
+                /*
                 case "7":
                     Supply currentSupply = new Supply().initialize();
                     break;
@@ -267,7 +268,7 @@ public class Main {
         }
 
         System.exit(0);
-        App.getInstance().getEm().close();
-        App.getInstance().getEntityManagerFactory().close();
+        entityManager.close();
+        entityManagerFactory.close();
     }
 }

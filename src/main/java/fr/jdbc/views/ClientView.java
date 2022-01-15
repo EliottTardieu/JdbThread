@@ -4,6 +4,7 @@ import dnl.utils.text.table.TextTable;
 import fr.jdbc.App;
 import fr.jdbc.models.Client;
 
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 
 public class ClientView {
@@ -14,10 +15,10 @@ public class ClientView {
     /**
      * Affiche la liste de tous les clients
      */
-    public void displayAllClients() {
+    public void displayAllClients(EntityManager em) {
         String[] columnsClient = {"Id", "Nom", "Prénom", "Réduction", "Adresse", "Ville"};
         ArrayList<ArrayList<Object>> dataClient = new ArrayList<>();
-        for (Client client : App.getInstance().getClientDAO().getAll(App.getInstance().getEm())) {
+        for (Client client : App.getInstance().getClientDAO().getAll(em)) {
             ArrayList<Object> toAdd = new ArrayList<>();
             toAdd.add(client.getId());
             toAdd.add(client.getName());

@@ -1,5 +1,6 @@
 package fr.jdbc.database;
 
+import fr.jdbc.App;
 import fr.jdbc.models.Client;
 import fr.jdbc.models.FullAddress;
 import fr.jdbc.models.Product;

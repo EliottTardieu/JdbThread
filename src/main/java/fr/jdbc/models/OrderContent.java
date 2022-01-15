@@ -24,4 +24,10 @@ public class OrderContent {
     public OrderContent() {
 
     }
+
+    public OrderContent(Ordering ordering, Product product, int quantity) {
+        this.ordering = ordering;
+        this.product = product;
+        this.quantity = quantity;
+    }
 }

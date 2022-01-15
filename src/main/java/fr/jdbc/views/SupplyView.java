@@ -5,6 +5,7 @@ import fr.jdbc.App;
 import fr.jdbc.models.Product;
 import fr.jdbc.models.Supply;
 
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -16,14 +17,14 @@ public class SupplyView {
     /**
      * Affiche la liste de toutes les fournitures
      */
-    public void displayAllSupplies() {
+    public void displayAllSupplies(EntityManager em) {
         String[] columnsSupply = {"Id", "Nom", "Prénom", "Prix"};
         ArrayList<ArrayList<Object>> dataSupply = new ArrayList<>();
 
         String[] columnsSupplyContent = {"Id Fourniture", "Nom", "Catégorie", "Prix Unitaire"};
         ArrayList<ArrayList<Object>> dataSupplyContent = new ArrayList<>();
 
-        for (Supply supply : App.getInstance().getSupplyDAO().getAll(App.getInstance().getEm())) {
+        for (Supply supply : App.getInstance().getSupplyDAO().getAll(em)) {
             ArrayList<Object> toAdd = new ArrayList<>();
             toAdd.add(supply.getId());
             toAdd.add(supply.getSupplier().getName());

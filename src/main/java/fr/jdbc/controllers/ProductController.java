@@ -8,6 +8,10 @@ import javax.persistence.EntityManager;
 import java.util.ArrayList;
 
 public class ProductController {
+    public ProductController() {
+
+    }
+
     public Product createProduct(EntityManager em, String name, String category, String species, float unitPrice, int availableQuantity) {
         Product product = new Product(name, category, species, unitPrice, availableQuantity);
 
@@ -26,6 +30,10 @@ public class ProductController {
 
     public void updatePrice(EntityManager em, Product product, float newPrice) {
         App.getInstance().getProductDAO().updateProductPrice(em, product, newPrice);
+    }
+
+    public void updateQuantity(EntityManager em, Product product, int newQuantity) {
+        App.getInstance().getProductDAO().updateQuantity(em, product, newQuantity);
     }
 
     public void deleteProduct(EntityManager em, Product product) {
