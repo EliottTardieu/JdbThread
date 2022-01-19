@@ -1,13 +1,14 @@
 package fr.jdbc.models;
 
+import fr.jdbc.App;
 import lombok.Getter;
 import lombok.Setter;
-
 import javax.persistence.*;
 import java.util.*;
 
 @Entity
-public class Product {
+public class Product implements Model {
+
     @Getter
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -28,15 +29,15 @@ public class Product {
     private int availableQuantity;
 
     @Getter @Setter
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Supplier supplier;
 
     @Getter @Setter
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Supply supply;
 
     @Getter @Setter
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product")
     private Set<OrderContent> orderContents;
 
     public Product() {
@@ -50,5 +51,6 @@ public class Product {
         this.species = species;
         this.unitPrice = unitPrice;
         this.availableQuantity = availableQuantity;
+        App.getInstance().getProductsController().getProducts().add(this);
     }
 }

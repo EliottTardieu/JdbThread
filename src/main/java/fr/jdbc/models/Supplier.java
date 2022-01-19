@@ -1,13 +1,14 @@
 package fr.jdbc.models;
 
+import fr.jdbc.App;
 import lombok.Getter;
 import lombok.Setter;
-
 import javax.persistence.*;
 import java.util.*;
 
 @Entity
-public class Supplier {
+public class Supplier implements Model {
+
     @Getter
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -19,15 +20,15 @@ public class Supplier {
     private String forename;
 
     @Getter @Setter
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     private FullAddress address;
 
     @Getter @Setter
-    @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "supplier")
     private List<Product> products;
 
     @Getter @Setter
-    @OneToOne(mappedBy = "supplier", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "supplier")
     private Supply supply;
 
     public Supplier() {
@@ -39,5 +40,6 @@ public class Supplier {
         this.name = name;
         this.forename = forename;
         this.address = address;
+        App.getInstance().getSuppliersController().getSuppliers().add(this);
     }
 }

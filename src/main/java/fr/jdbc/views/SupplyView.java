@@ -11,10 +11,10 @@ import fr.jdbc.utils.Logger;
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Scanner;
 
 public class SupplyView {
+
     public SupplyView() {
 
     }
@@ -29,7 +29,7 @@ public class SupplyView {
         String[] columnsSupplyContent = {"Id Fourniture", "Nom", "Catégorie", "Prix Unitaire"};
         ArrayList<ArrayList<Object>> dataSupplyContent = new ArrayList<>();
 
-        for (Supply supply : App.getInstance().getSupplyDAO().getAll(em)) {
+        for (Supply supply : App.getInstance().getSuppliesController().getAll(em)) {
             ArrayList<Object> toAdd = new ArrayList<>();
             toAdd.add(supply.getId());
             toAdd.add(supply.getSupplier().getName());
@@ -72,62 +72,55 @@ public class SupplyView {
      */
     public Supply initialize(EntityManager em) {
         Scanner scanner = new Scanner(System.in);
-        String choice;
-        Supply supply = null;
-        Supplier supplier;
-        String supplierName;
-        String supplierForename;
-        String supplierAddress;
-        String supplierCity;
-        FullAddress supplierFullAddress;
-        ArrayList<Product> products = new ArrayList<>();
-        float price;
 
         // Adresse du fournisseur
         System.out.println("Entrez l'adresse du fournisseur: ");
-        supplierAddress = scanner.nextLine();
+        String supplierAddress = scanner.nextLine();
         System.out.println("Entrez la ville du fournisseur: ");
-        supplierCity = scanner.nextLine();
+        String supplierCity = scanner.nextLine();
         HashMap<String, Object> criteriasAdd = new HashMap<>();
         criteriasAdd.put("address", supplierAddress);
         criteriasAdd.put("city", supplierCity);
-        if (App.getInstance().getFullAddressDAO().findByFullAddress(em, criteriasAdd) != null) {
-            supplierFullAddress = App.getInstance().getFullAddressDAO().findByFullAddress(em, criteriasAdd);
+        FullAddress supplierFullAddress;
+        if (App.getInstance().getFullAddressesController().findByFullAddress(em, criteriasAdd) != null) {
+            supplierFullAddress = App.getInstance().getFullAddressesController().findByFullAddress(em, criteriasAdd);
             Logger.fine("Supplier address found.");
         } else {
-            supplierFullAddress = App.getInstance().getFullAddressController().createFullAddress(em, supplierAddress, supplierCity);
+            supplierFullAddress = App.getInstance().getFullAddressesController().createFullAddress(em, supplierAddress, supplierCity, true);
             Logger.warning("Supplier address unknown, added to database.");
         }
 
         // Nom du fournisseur et fournisseur
         System.out.println("Entrez le nom du fournisseur: ");
-        supplierName = scanner.nextLine();
+        String supplierName = scanner.nextLine();
         System.out.println("Entrez le prénom du fournisseur: ");
-        supplierForename = scanner.nextLine();
+        String supplierForename = scanner.nextLine();
         HashMap<String, Object> criteriasSup = new HashMap<>();
         criteriasSup.put("name", supplierName);
         criteriasSup.put("forename", supplierForename);
         criteriasSup.put("address", supplierFullAddress.getId());
-        if (App.getInstance().getSupplierDAO().find(em, criteriasSup) != null) {
-            supplier = App.getInstance().getSupplierDAO().find(em, criteriasSup);
+        Supplier supplier;
+        if (App.getInstance().getSuppliersController().find(em, criteriasSup) != null) {
+            supplier = App.getInstance().getSuppliersController().find(em, criteriasSup);
         } else {
-            supplier = App.getInstance().getSupplierController().createSupplier(em, supplierName, supplierForename, supplierFullAddress);
+            supplier = App.getInstance().getSuppliersController().createSupplier(em, supplierName, supplierForename, supplierFullAddress, true);
         }
 
         // Produits
         boolean stop = false;
+        ArrayList<Product> products = new ArrayList<>();
         System.out.println("Si vous avez fini, entrez \"stop\".");
         while (!stop) {
-            App.getInstance().getProductView().displayAllProducts(em);
+            App.getInstance().getProductsController().displayAll(em);
             System.out.println("Entrez le nom du produit à ajouter: ");
-            choice = scanner.nextLine();
+            String choice = scanner.nextLine();
             if (choice.equalsIgnoreCase("stop")) {
                 stop = true;
             } else {
                 HashMap<String, Object> criteriasProd = new HashMap<>();
                 criteriasProd.put("name", choice);
-                if (App.getInstance().getProductDAO().findByName(em, criteriasProd) != null) {
-                    Product product = App.getInstance().getProductDAO().findByName(em, criteriasProd);
+                if (App.getInstance().getProductsController().findByName(em, criteriasProd) != null) {
+                    Product product = App.getInstance().getProductsController().findByName(em, criteriasProd);
                     products.add(product);
                     if (!supplier.getProducts().contains(product)) supplier.getProducts().add(product);
                 } else {
@@ -139,23 +132,13 @@ public class SupplyView {
 
         // Prix
         System.out.println("Entrez le prix de la fourniture: ");
-        price = scanner.nextInt();
+        float price = scanner.nextInt();
         scanner.nextLine();
 
-        System.out.println("Fourniture terminée, confirmer l'enregistrement ? ");
-        choice = scanner.nextLine();
-        if (choice.equalsIgnoreCase("oui") || choice.equals("yes")) {
-            Logger.fine("Supply Saved in database.");
-            supply = App.getInstance().getSupplyController().createSupply(em, supplier, price, products);
-            System.out.println("Fourniture validée avec succès.");
-        } else if (choice.equalsIgnoreCase("non") || choice.equals("no")) {
-            Logger.warning("Supply not saved, the content has been reset.");
-            // TODO: Supprimer les infos concernant la supply
-            System.out.println("Fourniture annulée avec succès.");
-        } else {
-            Logger.severe("Unknown answer, supply was reset by default.");
-            // TODO: Supprimer les infos concernant la supply
-        }
+        Logger.fine("Supply Saved in database.");
+        Supply supply = App.getInstance().getSuppliesController().createSupply(em, supplier, price, products, true);
+        System.out.println("Fourniture validée avec succès.");
+
         return supply;
     }
 }

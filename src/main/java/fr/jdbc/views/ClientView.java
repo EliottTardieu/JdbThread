@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class ClientView {
+
     public ClientView() {
 
     }
@@ -22,7 +23,7 @@ public class ClientView {
     public void displayAllClients(EntityManager em) {
         String[] columnsClient = {"Id", "Nom", "Prénom", "Réduction", "Adresse", "Ville"};
         ArrayList<ArrayList<Object>> dataClient = new ArrayList<>();
-        for (Client client : App.getInstance().getClientDAO().getAll(em)) {
+        for (Client client : App.getInstance().getClientsController().getAll(em)) {
             ArrayList<Object> toAdd = new ArrayList<>();
             toAdd.add(client.getId());
             toAdd.add(client.getName());
@@ -39,45 +40,89 @@ public class ClientView {
 
     /**
      * Methode pour créer un client initialisé à partir de saisie dans un terminal.
-     *
-     * @return Client initialisée
      */
-    public Client initialize(EntityManager em) {
+    public void createClient(EntityManager em) {
         Scanner scanner = new Scanner(System.in);
-        String clientAddress;
-        String clientCity;
-        FullAddress fullAddress;
-        String name;
-        String forename;
-        int discount;
 
         // Adresse du client
         System.out.println("Entrez l'adresse du client: ");
-        clientAddress = scanner.nextLine();
+        String clientAddress = scanner.nextLine();
         System.out.println("Entrez la ville du client: ");
-        clientCity = scanner.nextLine();
+        String clientCity = scanner.nextLine();
         HashMap<String, Object> criteriasAdd = new HashMap<>();
         criteriasAdd.put("address", clientAddress);
         criteriasAdd.put("city", clientCity);
-        if (App.getInstance().getFullAddressDAO().findByFullAddress(em, criteriasAdd) != null) {
-            fullAddress = App.getInstance().getFullAddressDAO().findByFullAddress(em, criteriasAdd);
+        FullAddress fullAddress;
+        if (App.getInstance().getFullAddressesController().findByFullAddress(em, criteriasAdd) != null) {
+            fullAddress = App.getInstance().getFullAddressesController().findByFullAddress(em, criteriasAdd);
             Logger.fine("Client address found.");
         } else {
-            fullAddress = App.getInstance().getFullAddressController().createFullAddress(em, clientAddress, clientCity);
+            fullAddress = App.getInstance().getFullAddressesController().createFullAddress(em, clientAddress, clientCity, true);
             Logger.warning("Client address unknown, added to database.");
         }
 
         // Nom et prénom
         System.out.println("Entrez le nom: ");
-        name = scanner.nextLine();
+        String name = scanner.nextLine();
         System.out.println("Entrez le prénom: ");
-        forename = scanner.nextLine();
+        String forename = scanner.nextLine();
 
         // Reduction
         System.out.println("Entrez le montant de la réduction: ");
-        discount = scanner.nextInt();
+        int discount = scanner.nextInt();
         scanner.nextLine();
 
-        return App.getInstance().getClientController().createClient(em, name, forename, discount, fullAddress);
+        App.getInstance().getClientsController().createClient(em, name, forename, discount, fullAddress, true);
+    }
+
+    public void modifyClient(EntityManager em) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Entrez le nom du client que vous voulez modifier: ");
+        App.getInstance().getClientsController().displayAll(em);
+        String modifiedClientSc = scanner.nextLine();
+        HashMap<String, Object> criteriasModifiedClient = new HashMap<>();
+        criteriasModifiedClient.put("name", modifiedClientSc);
+        if (App.getInstance().getClientsController().findByName(em, criteriasModifiedClient) != null) {
+            Client modifiedClient = App.getInstance().getClientsController().findByName(em, criteriasModifiedClient);
+            System.out.println("\t1) Modifier le nom\n"
+                    + "\t2) Modifier le prénom");
+            String modifyClient = scanner.nextLine();
+            switch (modifyClient) {
+                case "1":
+                    System.out.println("Entrez le nouveau Nom du client: ");
+                    App.getInstance().getClientsController().updateName(em, modifiedClient, scanner.nextLine());
+                    break;
+                case "2":
+                    System.out.println("Entrez le nouveau Prénom du client: ");
+                    App.getInstance().getClientsController().updateForename(em, modifiedClient, scanner.nextLine());
+                    break;
+            }
+        } else {
+            Logger.severe("Unable to find such client.");
+        }
+    }
+
+    public void updateDiscount(EntityManager em) {
+        Scanner scanner = new Scanner(System.in);
+
+        App.getInstance().getClientsController().displayAll(em);
+        System.out.println("Entrez le nom du client: ");
+        String clientName = scanner.nextLine();
+        System.out.println("Entrez le prénom du client: ");
+        String clientForename = scanner.nextLine();
+        HashMap<String, Object> criteriasClientR = new HashMap<>();
+        criteriasClientR.put("name", clientName);
+        if (App.getInstance().getClientsController().findByName(em, criteriasClientR) != null) {
+            Client client = App.getInstance().getClientsController().findByName(em, criteriasClientR);
+            System.out.println("Entrez le montant de la réduction: ");
+            int reduction = scanner.nextInt();
+            scanner.nextLine();
+            App.getInstance().getClientsController().addDiscount(em, client, reduction);
+            System.out.println("Reduction bien appliquée à " + client.getName() + "\n");
+            Logger.fine("Client reduction applied.");
+        } else {
+            Logger.severe("Unable to find client.");
+        }
     }
 }

@@ -1,12 +1,13 @@
 package fr.jdbc.models;
 
+import fr.jdbc.App;
 import lombok.Getter;
 import lombok.Setter;
-
 import javax.persistence.*;
 
 @Entity
-public class Client {
+public class Client implements Model {
+
     @Getter
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -18,7 +19,7 @@ public class Client {
     private String forename;
 
     @Getter @Setter
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     private FullAddress address;
 
     @Getter @Setter
@@ -26,7 +27,7 @@ public class Client {
     private int discount;
 
     @Getter @Setter
-    @OneToOne(mappedBy = "client", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "client")
     private Ordering ordering;
 
     public Client() {
@@ -38,5 +39,6 @@ public class Client {
         this.forename = forename;
         this.discount = discount;
         this.address = address;
+        App.getInstance().getClientsController().getModels().add(this);
     }
 }

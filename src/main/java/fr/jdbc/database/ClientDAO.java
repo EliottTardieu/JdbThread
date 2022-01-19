@@ -1,9 +1,7 @@
 package fr.jdbc.database;
 
-import fr.jdbc.App;
 import fr.jdbc.models.Client;
-import fr.jdbc.models.FullAddress;
-
+import fr.jdbc.utils.DAOUtils;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -11,41 +9,24 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class ClientDAO {
+public class ClientDAO extends DAO<Client> {
 
     public ClientDAO() {
-
-    }
-
-    public void save(EntityManager em, Client client) {
-        em.getTransaction().begin();
-        em.persist(client);
-        em.getTransaction().commit();
+        super(Client.class);
     }
 
     public void updateName(EntityManager em, Client client, String newName) {
-        em.getTransaction().begin();
+        DAOUtils.begin(em);
         client.setName(newName);
-        em.getTransaction().commit();
+        DAOUtils.commit(em);
     }
 
     public void updateForename(EntityManager em, Client client, String newForename) {
-        em.getTransaction().begin();
+        DAOUtils.begin(em);
         client.setForename(newForename);
-        em.getTransaction().commit();
-    }
-
-    public void remove(EntityManager em, Client client) {
-        em.getTransaction().begin();
-        em.remove(client);
-        em.getTransaction().commit();
-    }
-
-    public List<Client> getAll(EntityManager em) {
-        return em.createQuery("from Client").getResultList();
+        DAOUtils.commit(em);
     }
 
     /**
@@ -59,7 +40,6 @@ public class ClientDAO {
         Predicate predicateForName = null;
         Predicate predicateForForename = null;
         Predicate predicateForAddress = null;
-        Predicate predicateForDiscount = null;
 
         for (Map.Entry<String, Object> entry : criterias.entrySet()) {
             if (entry.getKey().equalsIgnoreCase("name")) {
@@ -73,13 +53,9 @@ public class ClientDAO {
             if (entry.getKey().equalsIgnoreCase("address")) {
                 predicateForAddress = criteriaBuilder.equal(clientRoot.get("address"), entry.getValue());
             }
-
-            if (entry.getKey().equalsIgnoreCase("discount")) {
-                predicateForDiscount = criteriaBuilder.equal(clientRoot.get("discount"), entry.getValue());
-            }
         }
 
-        Predicate finalPredicate = criteriaBuilder.and(predicateForName, predicateForForename, predicateForAddress, predicateForDiscount);
+        Predicate finalPredicate = criteriaBuilder.and(predicateForName, predicateForForename, predicateForAddress);
         criteriaQuery.where(finalPredicate);
         try {
             return em.createQuery(criteriaQuery).getSingleResult();

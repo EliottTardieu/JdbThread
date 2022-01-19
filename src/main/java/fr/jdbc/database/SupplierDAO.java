@@ -5,6 +5,7 @@ import fr.jdbc.models.Client;
 import fr.jdbc.models.FullAddress;
 import fr.jdbc.models.Product;
 import fr.jdbc.models.Supplier;
+import fr.jdbc.utils.DAOUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -16,16 +17,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SupplierDAO {
+public class SupplierDAO extends DAO<Supplier> {
 
     public SupplierDAO() {
-
-    }
-
-    public void save(EntityManager em, Supplier supplier) {
-        em.getTransaction().begin();
-        em.persist(supplier);
-        em.getTransaction().commit();
+        super(Supplier.class);
     }
 
     public void updateName(EntityManager em, Supplier supplier, String newName) {
@@ -38,16 +33,6 @@ public class SupplierDAO {
         em.getTransaction().begin();
         supplier.setForename(newForename);
         em.getTransaction().commit();
-    }
-
-    public void remove(EntityManager em, Supplier supplier) {
-        em.getTransaction().begin();
-        em.remove(supplier);
-        em.getTransaction().commit();
-    }
-
-    public List<Supplier> getAll(EntityManager em) {
-        return em.createQuery("from Supplier").getResultList();
     }
 
     /**

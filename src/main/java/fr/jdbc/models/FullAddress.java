@@ -1,12 +1,13 @@
 package fr.jdbc.models;
 
+import fr.jdbc.App;
 import lombok.Getter;
 import lombok.Setter;
-
 import javax.persistence.*;
 
 @Entity
-public class FullAddress {
+public class FullAddress implements Model {
+
     @Getter
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -18,11 +19,11 @@ public class FullAddress {
     private String city;
 
     @Getter @Setter
-    @OneToOne(mappedBy = "address", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "address")
     private Client client;
 
     @Getter @Setter
-    @OneToOne(mappedBy = "address", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "address")
     private Supplier supplier;
 
     public FullAddress() {
@@ -32,5 +33,6 @@ public class FullAddress {
     public FullAddress(String address, String city) {
         this.address = address;
         this.city = city;
+        App.getInstance().getFullAddressesController().getFullAddresses().add(this);
     }
 }

@@ -1,36 +1,18 @@
 package fr.jdbc.database;
 
-import fr.jdbc.App;
 import fr.jdbc.models.OrderContent;
-
+import fr.jdbc.utils.DAOUtils;
 import javax.persistence.EntityManager;
-import java.util.List;
 
-public class OrderContentDAO {
+public class OrderContentDAO extends DAO<OrderContent> {
 
     public OrderContentDAO() {
-
-    }
-
-    public void save(EntityManager em, OrderContent orderContent) {
-        em.getTransaction().begin();
-        em.persist(orderContent);
-        em.getTransaction().commit();
+        super(OrderContent.class);
     }
 
     public void updateQuantity(EntityManager em, OrderContent orderContent, int newQuantity) {
-        em.getTransaction().begin();
+        DAOUtils.begin(em);
         orderContent.setQuantity(newQuantity);
-        em.getTransaction().commit();
-    }
-
-    public void remove(EntityManager em, OrderContent orderContent) {
-        em.getTransaction().begin();
-        em.remove(orderContent);
-        em.getTransaction().commit();
-    }
-
-    public List<OrderContent> getAll(EntityManager em) {
-        return em.createQuery("from OrderContent").getResultList();
+        DAOUtils.commit(em);
     }
 }

@@ -1,5 +1,6 @@
 package fr.jdbc.models;
 
+import fr.jdbc.App;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,7 +9,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class Ordering {
+public class Ordering implements Model {
+
     @Getter
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -17,11 +19,11 @@ public class Ordering {
     private float price;
 
     @Getter @Setter
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     private Client client;
 
     @Getter @Setter
-    @OneToMany(mappedBy = "ordering", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "ordering")
     private Set<OrderContent> orderContents;
 
     public Ordering() {
@@ -32,13 +34,6 @@ public class Ordering {
         this.price = price;
         this.client = client;
         this.orderContents = orderContents;
+        App.getInstance().getOrderingsController().getOrderings().add(this);
     }
-    /*
-    private void save() {
-        for (int i = 0; i < this.products.size(); i++) {
-            App.getInstance().getProductDAO().save(this.products.get(i));
-        }
-        this.backupQuantity.clear();
-        App.getInstance().getOrderDAO().save(this);
-    }*/
 }

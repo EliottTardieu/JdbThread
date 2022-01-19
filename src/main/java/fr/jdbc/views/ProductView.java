@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class ProductView {
+
     public ProductView() {
 
     }
@@ -20,7 +21,7 @@ public class ProductView {
     public void displayAllProducts(EntityManager em) {
         String[] columnsProducts = {"Id", "Nom", "Catégorie", "Espèce", "Prix Unitaire (HT)", "Stock Disponible"};
         ArrayList<ArrayList<Object>> dataProducts = new ArrayList<>();
-        for (Product product : App.getInstance().getProductDAO().getAll(em)) {
+        for (Product product : App.getInstance().getProductsController().getAll(em)) {
             ArrayList<Object> toAdd = new ArrayList<>();
             toAdd.add(product.getId());
             toAdd.add(product.getName());
@@ -42,44 +43,80 @@ public class ProductView {
      */
     public Product initialize(EntityManager em) {
         Scanner scanner = new Scanner(System.in);
-        String productName;
-        String productCategory;
-        String productSpecies;
-        float productUnitPrice;
-        int productAvailableQuantity;
 
         // Nom du produit
         System.out.println("Entrez le nom du produit : ");
-        productName = scanner.nextLine();
+        String productName = scanner.nextLine();
         HashMap<String, Object> criteriasAdd = new HashMap<>();
         criteriasAdd.put("name", productName);
-        if (App.getInstance().getProductDAO().findByName(em, criteriasAdd) != null) {
+        if (App.getInstance().getProductsController().findByName(em, criteriasAdd) != null) {
             Logger.fine("Product found.");
             System.out.println("Produit déjà présent dans le magasin");
-            return App.getInstance().getProductDAO().findByName(em, criteriasAdd);
+            return App.getInstance().getProductsController().findByName(em, criteriasAdd);
         }
 
         // Catégorie du produit
         System.out.println("Entrez la catégorie (Plante/Fleur): ");
-        productCategory = scanner.nextLine();
+        String productCategory = scanner.nextLine();
 
         // Espèce
         System.out.println("Entrez l'espèce de votre " + productCategory + " : ");
-        productSpecies = scanner.nextLine();
+        String productSpecies = scanner.nextLine();
 
         // Prix unitaire
         System.out.println("Entrez le prix de votre " + productCategory + " : ");
-        productUnitPrice = scanner.nextFloat();
+        float productUnitPrice = scanner.nextFloat();
         scanner.nextLine();
 
         // Quantité disponible
         System.out.println("Entrez la quantité de votre " + productCategory + " que vous aurez en stock : ");
-        productAvailableQuantity = scanner.nextInt();
+        int productAvailableQuantity = scanner.nextInt();
         scanner.nextLine();
 
-        Product product = App.getInstance().getProductController().createProduct(em, productName, productCategory, productSpecies, productUnitPrice, productAvailableQuantity);
+        Product product = App.getInstance().getProductsController().createProduct(em, productName, productCategory, productSpecies, productUnitPrice, productAvailableQuantity, true);
         System.out.println("Produit ajouté au magasin");
 
         return product;
+    }
+
+    public void modifyProduct(EntityManager em) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Entrez le nom du produit que vous voulez modifier: ");
+        App.getInstance().getProductsController().displayAll(em);
+        String modifiedProductName = scanner.nextLine();
+        HashMap<String, Object> criteriasModifiedProduct = new HashMap<>();
+        criteriasModifiedProduct.put("name", modifiedProductName);
+        if (App.getInstance().getProductsController().findByName(em, criteriasModifiedProduct) != null) {
+            Product modifiedProduct = App.getInstance().getProductsController().findByName(em, criteriasModifiedProduct);
+            System.out.println("\t1) Modifier le nom\n"
+                    + "\t2) Modifier le prix unitaire\n"
+                    + "\t3) Modifier la quantité en stock");
+            String modifyObject = scanner.nextLine();
+            switch (modifyObject) {
+                case "1":
+                    System.out.println("Entrer le nouveau nom: ");
+                    String newNameProduct = scanner.nextLine();
+                    App.getInstance().getProductsController().updateName(em, modifiedProduct, newNameProduct);
+                    System.out.println("Le nom du produit a bien été modifié\n");
+                    break;
+
+                case "2":
+                    System.out.println("Entrer le nouveau prix: ");
+                    String newPriceProduct = scanner.nextLine();
+                    App.getInstance().getProductsController().updatePrice(em, modifiedProduct, Float.parseFloat(newPriceProduct));
+                    System.out.println("Le prix du produit a bien été modifié\n");
+                    break;
+
+                case "3":
+                    System.out.println("Entrer la nouvelle quantité en stock: ");
+                    String newQuantityProduct = scanner.nextLine();
+                    App.getInstance().getProductsController().updateQuantity(em, modifiedProduct, Integer.parseInt(newQuantityProduct));
+                    System.out.println("La quantité en stock du produit a bien été modifié\n");
+                    break;
+            }
+        } else {
+            Logger.severe("Unable to find such product.");
+        }
     }
 }

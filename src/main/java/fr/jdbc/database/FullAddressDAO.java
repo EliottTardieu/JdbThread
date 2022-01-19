@@ -1,10 +1,9 @@
 package fr.jdbc.database;
 
-import fr.jdbc.App;
 import fr.jdbc.models.FullAddress;
+import fr.jdbc.utils.DAOUtils;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -13,32 +12,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FullAddressDAO {
+public class FullAddressDAO extends DAO<FullAddress> {
 
     public FullAddressDAO() {
-
-    }
-
-    public void save(EntityManager em, FullAddress fullAddress) {
-        em.getTransaction().begin();
-        em.persist(fullAddress);
-        em.getTransaction().commit();
+        super(FullAddress.class);
     }
 
     public void updateAddress(EntityManager em, FullAddress fullAddress, String newAddress) {
-        em.getTransaction().begin();
+        DAOUtils.begin(em);
         fullAddress.setAddress(newAddress);
-        em.getTransaction().commit();
-    }
-
-    public void remove(EntityManager em, FullAddress fullAddress) {
-        em.getTransaction().begin();
-        em.remove(fullAddress);
-        em.getTransaction().commit();
-    }
-
-    public List<FullAddress> getAll(EntityManager em) {
-        return em.createQuery("from FullAddress").getResultList();
+        DAOUtils.commit(em);
     }
 
     public FullAddress findByFullAddress(EntityManager em, HashMap<String, Object> criterias) {

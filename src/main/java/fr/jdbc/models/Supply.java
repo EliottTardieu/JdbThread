@@ -1,23 +1,24 @@
 package fr.jdbc.models;
 
+import fr.jdbc.App;
 import lombok.Getter;
 import lombok.Setter;
-
 import javax.persistence.*;
 import java.util.*;
 
 @Entity
-public class Supply {
+public class Supply implements Model {
+
     @Getter
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Getter @Setter
-    @OneToMany(mappedBy = "supply", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "supply")
     private List<Product> products;
 
     @Getter @Setter
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     private Supplier supplier;
 
     @Getter @Setter
@@ -31,14 +32,6 @@ public class Supply {
         this.supplier = supplier;
         this.price = price;
         this.products = products;
+        App.getInstance().getSuppliesController().getSupplies().add(this);
     }
-
-    /*
-    private void reset() {
-        // Pour remettre les quantités disponibles si la commande est annulée.
-        this.products = new ArrayList<>();
-        this.price = 0;
-        this.supplier = null;
-    }
-    */
 }

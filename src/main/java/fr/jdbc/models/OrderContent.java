@@ -1,20 +1,21 @@
 package fr.jdbc.models;
 
+import fr.jdbc.App;
 import lombok.Getter;
 import lombok.Setter;
-
 import javax.persistence.*;
 
 @Entity
 @IdClass(OrderContentId.class)
-public class OrderContent {
+public class OrderContent implements Model {
+
     @Getter
-    @Id @ManyToOne(cascade = CascadeType.ALL)
+    @Id @ManyToOne
     @JoinColumn(name = "ordering_id")
     private Ordering ordering;
 
     @Getter
-    @Id @ManyToOne(cascade = CascadeType.ALL)
+    @Id @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
 
@@ -29,5 +30,6 @@ public class OrderContent {
         this.ordering = ordering;
         this.product = product;
         this.quantity = quantity;
+        App.getInstance().getOrdersContentsController().getOrdersContents().add(this);
     }
 }

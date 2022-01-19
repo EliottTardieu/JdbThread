@@ -3,6 +3,7 @@ package fr.jdbc.database;
 import fr.jdbc.App;
 import fr.jdbc.models.Client;
 import fr.jdbc.models.Product;
+import fr.jdbc.utils.DAOUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -15,50 +16,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ProductDAO {
+public class ProductDAO extends DAO<Product> {
 
     public ProductDAO() {
-
-    }
-
-    public void save(EntityManager em, Product product) {
-        em.getTransaction().begin();
-        em.persist(product);
-        em.getTransaction().commit();
+        super(Product.class);
     }
 
     public void updateProductName(EntityManager em, Product product, String newName) {
-        em.getTransaction().begin();
+        DAOUtils.begin(em);
         product.setName(newName);
-        em.getTransaction().commit();
+        DAOUtils.commit(em);
     }
 
     public void updateProductPrice(EntityManager em, Product product, float newPrice) {
-        em.getTransaction().begin();
+        DAOUtils.begin(em);
         product.setUnitPrice(newPrice);
-        em.getTransaction().commit();
+        DAOUtils.commit(em);
     }
 
     public void updateQuantity(EntityManager em, Product product, int newQuantity) {
-        em.getTransaction().begin();
+        DAOUtils.begin(em);
         product.setAvailableQuantity(newQuantity);
-        em.getTransaction().commit();
-    }
-
-    public void remove(EntityManager em, Product product) {
-        em.getTransaction().begin();
-        em.remove(product);
-        em.getTransaction().commit();
-    }
-
-    public List<Product> getAll(EntityManager em) {
-        return em.createQuery("from Product").getResultList();
-    }
-
-    public List<Product> getByCategory(EntityManager em, String category) {
-        Query query = em.createQuery("from Product where category = :category");
-        query.setParameter("category", category);
-        return query.getResultList();
+        DAOUtils.commit(em);
     }
 
     public Product findByName(EntityManager em, HashMap<String, Object> criterias) {

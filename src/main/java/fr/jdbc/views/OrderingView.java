@@ -3,13 +3,13 @@ package fr.jdbc.views;
 import dnl.utils.text.table.TextTable;
 import fr.jdbc.App;
 import fr.jdbc.models.*;
+import fr.jdbc.utils.DAOUtils;
 import fr.jdbc.utils.Logger;
-import org.hibernate.criterion.Order;
-
 import javax.persistence.EntityManager;
 import java.util.*;
 
 public class OrderingView {
+
     public OrderingView() {
 
     }
@@ -24,7 +24,7 @@ public class OrderingView {
         String[] columnsOrderContent = {"Id Commande", "Nom Produit", "Quantité", "Prix Unitaire"};
         ArrayList<ArrayList<Object>> dataOrderContent = new ArrayList<>();
 
-        for (Ordering ordering : App.getInstance().getOrderingDAO().getAll(em)) {
+        for (Ordering ordering : App.getInstance().getOrderingsController().getAll(em)) {
             ArrayList<Object> toAdd = new ArrayList<>();
             toAdd.add(ordering.getId());
             toAdd.add(ordering.getPrice());
@@ -34,7 +34,7 @@ public class OrderingView {
             dataOrders.add(toAdd);
         }
 
-        for (OrderContent orderContent : App.getInstance().getOrderContentDAO().getAll(em)) {
+        for (OrderContent orderContent : App.getInstance().getOrdersContentsController().getAll(em)) {
             ArrayList<Object> toAddContent = new ArrayList<>();
             toAddContent.add(orderContent.getOrdering().getId());
             toAddContent.add(orderContent.getProduct().getName());
@@ -68,67 +68,64 @@ public class OrderingView {
      */
     public Ordering initialize(EntityManager em) {
         Scanner scanner = new Scanner(System.in);
-        String choice;
+
         Ordering ordering = new Ordering();
         Set<OrderContent> orderContentSet = new HashSet<>();
-        HashMap<Product, Integer> backupQuantity = new HashMap<>();
-        Client client;
-        String clientName;
-        String clientForename;
-        String clientAddress;
-        String clientCity;
-        int clientDiscount;
-        FullAddress clientFullAddress;
+
         // Adresse du client
         System.out.println("Entrez l'adresse du client: ");
-        clientAddress = scanner.nextLine();
+        String clientAddress = scanner.nextLine();
         System.out.println("Entrez la ville du client: ");
-        clientCity = scanner.nextLine();
+        String clientCity = scanner.nextLine();
         HashMap<String, Object> criteriasAdd = new HashMap<>();
         criteriasAdd.put("address", clientAddress);
         criteriasAdd.put("city", clientCity);
-        if (App.getInstance().getFullAddressDAO().findByFullAddress(em, criteriasAdd) != null) {
-            clientFullAddress = App.getInstance().getFullAddressDAO().findByFullAddress(em, criteriasAdd);
+        FullAddress clientFullAddress;
+        if (App.getInstance().getFullAddressesController().findByFullAddress(em, criteriasAdd) != null) {
+            clientFullAddress = App.getInstance().getFullAddressesController().findByFullAddress(em, criteriasAdd);
             Logger.fine("Client address found.");
         } else {
-            clientFullAddress = App.getInstance().getFullAddressController().createFullAddress(em, clientAddress, clientCity);
+            clientFullAddress = App.getInstance().getFullAddressesController().createFullAddress(em, clientAddress, clientCity, true);
             Logger.warning("Client address unknown, added to database.");
         }
+
         // Nom du client et client
         System.out.println("Entrez le nom du client: ");
-        clientName = scanner.nextLine();
+        String clientName = scanner.nextLine();
         System.out.println("Entrez le prénom du client: ");
-        clientForename = scanner.nextLine();
-        System.out.println("Entrez la réduction du client: ");
-        clientDiscount = scanner.nextInt();
-        scanner.nextLine();
+        String clientForename = scanner.nextLine();
         HashMap<String, Object> criteriasCli = new HashMap<>();
         criteriasCli.put("name", clientName);
         criteriasCli.put("forename", clientForename);
         criteriasCli.put("address", clientFullAddress.getId());
-        criteriasCli.put("discount", clientDiscount);
-        if (App.getInstance().getClientDAO().find(em, criteriasCli) != null) {
-            client = App.getInstance().getClientDAO().find(em, criteriasCli);
+        Client client;
+        if (App.getInstance().getClientsController().find(em, criteriasCli) != null) {
+            client = App.getInstance().getClientsController().find(em, criteriasCli);
         } else {
-            client = App.getInstance().getClientController().createClient(em, clientName, clientForename, clientDiscount, clientFullAddress);
+            System.out.println("Entrez la réduction du client: ");
+            int clientDiscount = scanner.nextInt();
+            scanner.nextLine();
+            client = App.getInstance().getClientsController().createClient(em, clientName, clientForename, clientDiscount, clientFullAddress, true);
         }
+
         // Produits et Quantités
         boolean stop = false;
         System.out.println("Si vous avez fini, entrez \"stop\".");
-        for (Product product : App.getInstance().getProductDAO().getAll(em)) {
+        HashMap<Product, Integer> backupQuantity = new HashMap<>();
+        for (Product product : App.getInstance().getProductsController().getAll(em)) {
             backupQuantity.put(product, product.getAvailableQuantity());
         }
         while (!stop) {
-            App.getInstance().getProductView().displayAllProducts(em);
+            App.getInstance().getProductsController().displayAll(em);
             System.out.println("Entrez le nom du produit à ajouter: ");
-            choice = scanner.nextLine();
+            String choice = scanner.nextLine();
             if (choice.equalsIgnoreCase("stop")) {
                 stop = true;
             } else {
                 HashMap<String, Object> criteriasProd = new HashMap<>();
                 criteriasProd.put("name", choice);
-                if (App.getInstance().getProductDAO().findByName(em, criteriasProd) != null) {
-                    Product product = App.getInstance().getProductDAO().findByName(em, criteriasProd);
+                if (App.getInstance().getProductsController().findByName(em, criteriasProd) != null) {
+                    Product product = App.getInstance().getProductsController().findByName(em, criteriasProd);
                     System.out.println("Entrez une quantité pour ce produit: (stop quand vous avez fini)");
                     int qt = scanner.nextInt();
                     scanner.nextLine();
@@ -137,7 +134,7 @@ public class OrderingView {
                     } else if (qt > product.getAvailableQuantity()) {
                         System.out.println("Quantité invalide, vous ne pouvez pas mettre plus de produits que ce que vous avez de disponible.");
                     } else {
-                        orderContentSet.add(App.getInstance().getOrderContentController().createOrderContent(em, ordering, product, qt));
+                        orderContentSet.add(App.getInstance().getOrdersContentsController().createOrderContent(em, ordering, product, qt, true));
                     }
                 } else {
                     System.out.println("Wrong product name, please select a valid product.");
@@ -146,31 +143,13 @@ public class OrderingView {
             }
         }
         // Prix
-        float price = App.getInstance().getOrderingController().computePrice(orderContentSet, client);
+        float price = App.getInstance().getOrderingsController().computePrice(orderContentSet, client);
         System.out.println("Le prix de la commande est de " + price + "€");
 
-        System.out.println("Commande terminée, confirmer l'enregistrement ? ");
-        choice = scanner.nextLine();
-        if (choice.equalsIgnoreCase("oui") || choice.equalsIgnoreCase("yes")) {
-            Logger.fine("Order Saved in database.");
-            App.getInstance().getOrderingController().createOrdering(em, ordering, price, client, orderContentSet);
-            System.out.println("Commande validée avec succès.");
-        } else if (choice.equalsIgnoreCase("non") || choice.equalsIgnoreCase("no")) {
-            Logger.warning("Order not saved, the content has been reset.");
-            for (Product product : backupQuantity.keySet()) {
-                product.setAvailableQuantity(backupQuantity.get(product));
-                App.getInstance().getProductDAO().save(em, product);
-            }
-            // TODO: Supprimer les lignes de la commande
-            System.out.println("Commande annulée avec succès.");
-        } else {
-            Logger.severe("Unknown answer, order was reset by default.");
-            for (Product product : backupQuantity.keySet()) {
-                product.setAvailableQuantity(backupQuantity.get(product));
-                App.getInstance().getProductDAO().save(em, product);
-            }
-            // TODO: Supprimer les lignes de la commande
-        }
+        Logger.fine("Order Saved in database.");
+        ordering = App.getInstance().getOrderingsController().initializeOrdering(em, ordering, price, client, orderContentSet, true);
+        System.out.println("Commande validée avec succès.");
+
         return ordering;
     }
 }
