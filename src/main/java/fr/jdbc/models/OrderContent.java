@@ -1,6 +1,5 @@
 package fr.jdbc.models;
 
-import fr.jdbc.App;
 import lombok.Getter;
 import lombok.Setter;
 import javax.persistence.*;
@@ -30,6 +29,5 @@ public class OrderContent implements Model {
         this.ordering = ordering;
         this.product = product;
         this.quantity = quantity;
-        App.getInstance().getOrdersContentsController().getOrdersContents().add(this);
     }
 }

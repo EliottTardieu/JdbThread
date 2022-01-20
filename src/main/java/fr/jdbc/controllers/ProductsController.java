@@ -9,35 +9,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class ProductsController {
+public class ProductsController extends Controller<Product> {
 
-    @Getter
-    private List<Product> products = new ArrayList<>();
-    private ProductDAO DAO = new ProductDAO();
-    private ProductView view = new ProductView();
+    private final ProductDAO DAO = new ProductDAO();
+    private final ProductView view = new ProductView();
 
     public ProductsController() {
-
+        super(Product.class);
     }
 
     public Product initialize(EntityManager em) {
         return view.initialize(em);
     }
 
-    public Product createProduct(EntityManager em, String name, String category, String species, float unitPrice, int availableQuantity, boolean sync) {
+    public Product createProduct(EntityManager em, String name, String category, String species, float unitPrice, int availableQuantity, boolean autoCommit) {
         Product product = new Product(name, category, species, unitPrice, availableQuantity);
-
-        if (sync) {
-            DAO.save(em, product);
-        } else {
-            DAO.persist(em, product);
-        }
-
-        if (em.contains(product)) {
-            return product;
-        } else {
-            return null;
-        }
+        return this.save(em, DAO, product, autoCommit);
     }
 
     public void updateName(EntityManager em, Product product, String newName) {
@@ -57,6 +44,7 @@ public class ProductsController {
     }
 
     public void deleteProduct(EntityManager em, Product product) {
+        this.models.remove(product);
         DAO.remove(em, product);
     }
 

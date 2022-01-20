@@ -1,6 +1,5 @@
 package fr.jdbc.models;
 
-import fr.jdbc.App;
 import lombok.Getter;
 import lombok.Setter;
 import javax.persistence.*;
@@ -32,6 +31,5 @@ public class Supply implements Model {
         this.supplier = supplier;
         this.price = price;
         this.products = products;
-        App.getInstance().getSuppliesController().getSupplies().add(this);
     }
 }

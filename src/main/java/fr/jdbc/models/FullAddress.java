@@ -1,6 +1,5 @@
 package fr.jdbc.models;
 
-import fr.jdbc.App;
 import lombok.Getter;
 import lombok.Setter;
 import javax.persistence.*;
@@ -33,6 +32,5 @@ public class FullAddress implements Model {
     public FullAddress(String address, String city) {
         this.address = address;
         this.city = city;
-        App.getInstance().getFullAddressesController().getFullAddresses().add(this);
     }
 }

@@ -12,34 +12,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class OrderingsController {
+public class OrderingsController extends Controller<Ordering> {
 
-    @Getter
-    private ArrayList<Ordering> orderings = new ArrayList<>();
-    private OrderingView view = new OrderingView();
-    private OrderingDAO DAO = new OrderingDAO();
+    private final OrderingView view = new OrderingView();
+    private final OrderingDAO DAO = new OrderingDAO();
 
-    public OrderingsController() {}
+    public OrderingsController() {
+        super(Ordering.class);
+    }
 
     public Ordering initialize(EntityManager em) { return view.initialize(em); }
 
-    public Ordering initializeOrdering(EntityManager em, Ordering ordering, float price, Client client, Set<OrderContent> orderContentSet, boolean sync) {
+    public Ordering createEmptyOrdering() {
+        return new Ordering();
+    }
+
+    public Ordering initializeOrdering(EntityManager em, Ordering ordering, float price, Client client, Set<OrderContent> orderContentSet, boolean autoCommit) {
         ordering.setPrice(price);
         ordering.setClient(client);
         ordering.setOrderContents(orderContentSet);
         client.setOrdering(ordering);
-
-        if (sync) {
-            DAO.save(em, ordering);
-        } else {
-            DAO.persist(em, ordering);
-        }
-
-        if (em.contains(ordering)) {
-            return ordering;
-        } else {
-            return null;
-        }
+        return this.save(em, DAO, ordering, autoCommit);
     }
 
     public void updatePrice(EntityManager em, Ordering ordering, float newPrice) {
@@ -47,6 +40,7 @@ public class OrderingsController {
     }
 
     public void deleteOrdering(EntityManager em, Ordering ordering) {
+        this.models.remove(ordering);
         DAO.remove(em, ordering);
     }
 

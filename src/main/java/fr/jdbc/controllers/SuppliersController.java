@@ -10,36 +10,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class SuppliersController {
+public class SuppliersController extends Controller<Supplier> {
 
-    @Getter
-    private ArrayList<Supplier> suppliers = new ArrayList<>();
-    private SupplierDAO DAO = new SupplierDAO();
-    private SupplierView view = new SupplierView();
+    private final SupplierDAO DAO = new SupplierDAO();
+    private final SupplierView view = new SupplierView();
 
     public SuppliersController() {
-
+        super(Supplier.class);
     }
 
     public Supplier initialize(EntityManager em) {
         return view.initialize(em);
     }
 
-    public Supplier createSupplier(EntityManager em, String name, String forename, FullAddress fullAddress, boolean sync) {
+    public Supplier createSupplier(EntityManager em, String name, String forename, FullAddress fullAddress, boolean autoCommit) {
         Supplier supplier = new Supplier(name, forename, fullAddress);
         fullAddress.setSupplier(supplier);
-
-        if (sync) {
-            DAO.save(em, supplier);
-        } else {
-            DAO.persist(em, supplier);
-        }
-
-        if (em.contains(supplier)) {
-            return supplier;
-        } else {
-            return null;
-        }
+        return this.save(em, DAO, supplier, autoCommit);
     }
 
     public void updateName(EntityManager em, Supplier supplier, String newName) {
@@ -55,6 +42,7 @@ public class SuppliersController {
     }
 
     public void deleteSupplier(EntityManager em, Supplier supplier) {
+        this.models.remove(supplier);
         DAO.remove(em, supplier);
     }
 

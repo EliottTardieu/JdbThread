@@ -69,7 +69,7 @@ public class OrderingView {
     public Ordering initialize(EntityManager em) {
         Scanner scanner = new Scanner(System.in);
 
-        Ordering ordering = new Ordering();
+        Ordering ordering = App.getInstance().getOrderingsController().createEmptyOrdering();
         Set<OrderContent> orderContentSet = new HashSet<>();
 
         // Adresse du client

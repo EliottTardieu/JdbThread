@@ -109,8 +109,8 @@ public class Main {
             }
         }
 
-        System.exit(0);
         entityManager.close();
         entityManagerFactory.close();
+        System.exit(0);
     }
 }

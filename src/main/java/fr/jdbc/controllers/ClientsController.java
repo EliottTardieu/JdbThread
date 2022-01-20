@@ -10,14 +10,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class ClientsController {
+public class ClientsController extends Controller<Client> {
 
-    @Getter
-    private final ArrayList<Client> models = new ArrayList<>();
     private final ClientDAO DAO = new ClientDAO();
     private final ClientView view = new ClientView();
 
-    public ClientsController() {}
+    public ClientsController() {
+        super(Client.class);
+    }
 
     public void createClient(EntityManager em) {
         view.createClient(em);
@@ -26,18 +26,7 @@ public class ClientsController {
     public Client createClient(EntityManager em, String name, String forename, int discount, FullAddress address, boolean autoCommit) {
         Client client = new Client(name, forename, discount, address);
         address.setClient(client);
-
-        if (autoCommit) {
-            DAO.save(em, client);
-        } else {
-            DAO.persist(em, client);
-        }
-
-        if (em.contains(client)) {
-            return client;
-        } else {
-            return null;
-        }
+        return this.save(em, DAO, client, autoCommit);
     }
 
     public void addDiscount(EntityManager em, Client client, int discount) {
@@ -62,6 +51,7 @@ public class ClientsController {
     }
 
     public void deleteClient(EntityManager em, Client client) {
+        this.models.remove(client);
         DAO.remove(em, client);
     }
 

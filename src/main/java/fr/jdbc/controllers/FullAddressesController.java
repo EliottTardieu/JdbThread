@@ -2,33 +2,22 @@ package fr.jdbc.controllers;
 
 import fr.jdbc.database.FullAddressDAO;
 import fr.jdbc.models.FullAddress;
-import lombok.Getter;
+
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class FullAddressesController {
+public class FullAddressesController extends Controller<FullAddress> {
 
-    @Getter
-    private final ArrayList<FullAddress> fullAddresses = new ArrayList<>();
     private final FullAddressDAO DAO = new FullAddressDAO();
 
-    public FullAddressesController() {}
+    public FullAddressesController() {
+        super(FullAddress.class);
+    }
 
     public FullAddress createFullAddress(EntityManager em, String address, String city, boolean autoCommit) {
         FullAddress fullAddress = new FullAddress(address, city);
-
-        if (autoCommit) {
-            DAO.save(em, fullAddress);
-        } else {
-            DAO.persist(em, fullAddress);
-        }
-
-        if (em.contains(fullAddress)) {
-            return fullAddress;
-        } else {
-            return null;
-        }
+        return this.save(em, DAO, fullAddress, autoCommit);
     }
 
     public void updateAddress(EntityManager em, FullAddress fullAddress, String newAddress) {
@@ -36,6 +25,7 @@ public class FullAddressesController {
     }
 
     public void deleteFullAddress(EntityManager em, FullAddress fullAddress) {
+        this.models.remove(fullAddress);
         DAO.remove(em, fullAddress);
     }
 

@@ -1,6 +1,5 @@
 package fr.jdbc.models;
 
-import fr.jdbc.App;
 import lombok.Getter;
 import lombok.Setter;
 import javax.persistence.*;
@@ -39,6 +38,5 @@ public class Client implements Model {
         this.forename = forename;
         this.discount = discount;
         this.address = address;
-        App.getInstance().getClientsController().getModels().add(this);
     }
 }

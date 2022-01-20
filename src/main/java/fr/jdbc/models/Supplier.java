@@ -1,6 +1,5 @@
 package fr.jdbc.models;
 
-import fr.jdbc.App;
 import lombok.Getter;
 import lombok.Setter;
 import javax.persistence.*;
@@ -40,6 +39,5 @@ public class Supplier implements Model {
         this.name = name;
         this.forename = forename;
         this.address = address;
-        App.getInstance().getSuppliersController().getSuppliers().add(this);
     }
 }

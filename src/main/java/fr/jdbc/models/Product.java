@@ -1,6 +1,5 @@
 package fr.jdbc.models;
 
-import fr.jdbc.App;
 import lombok.Getter;
 import lombok.Setter;
 import javax.persistence.*;
@@ -51,6 +50,5 @@ public class Product implements Model {
         this.species = species;
         this.unitPrice = unitPrice;
         this.availableQuantity = availableQuantity;
-        App.getInstance().getProductsController().getProducts().add(this);
     }
 }

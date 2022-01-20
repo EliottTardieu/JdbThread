@@ -1,9 +1,7 @@
 package fr.jdbc.models;
 
-import fr.jdbc.App;
 import lombok.Getter;
 import lombok.Setter;
-
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -34,6 +32,5 @@ public class Ordering implements Model {
         this.price = price;
         this.client = client;
         this.orderContents = orderContents;
-        App.getInstance().getOrderingsController().getOrderings().add(this);
     }
 }

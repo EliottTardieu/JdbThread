@@ -20,20 +20,17 @@ attached.
 Here we is the procedure to follow in order to install the database. All commands are meant to be run in bash.
 
 <ol>
-    <li>You must log in your mysql server using "mysql -u username -p".</li>
+    <li>You must create a "persistence.xml and edit its properties to make them fit your needs.</li>
+    <li>You may then log in your mysql server using "mysql -u username -p".</li>
     <li>You will then create the database: "CREATE DATABASE s7_hibernate;".</li>
-    <li>Then you log off from mysql and you go into the directory containing "s7_hibernate.sql".</li>
-    <li>Once you are in the right directory, you will execute this command: "mysql -u root -p s7_hibernate < s7_hibernate.sql".</li>
-    <li>After, to fill this database, you will execute this command: "mysql -u root -p s7_hibernate < s7_hibernate_data.sql".</li>
+    <li>OPTIONAL: Then you log off from mysql and you go into the directory containing "s7_hibernate.sql".</li>
+    <li>OPTIONAL: Once you are in the right directory, you will execute this command: "mysql -u root -p s7_hibernate < s7_hibernate.sql".</li>
+    <li>OPTIONAL: After, to fill this database, you will execute this command: "mysql -u root -p s7_hibernate < s7_hibernate_data.sql".</li>
 </ol>
-You have now imported successfully the jdbc database, with already existing examples in it.
+You have now imported successfully the database, with already existing examples in it.
 
-##### Now to get your jdbc Database to work:
+You can also decide not to create the tables before running the program, you can then adjust the "persistence.xml" file to make it fit your needs.
 
-<ol>
-    <li>You will find in src/main/resources/config/ the config.properties.example file.</li>
-    <li>You will copy paste it in the same directory and rename it to "config.properties".</li>
-    <li>You will then enter your database (mysql) username and password.</li>
-    <li>As it is in a conf.properties file which was gitignored, it will never be on git, so you can safely enter your 
-        credentials, this is a simple trick to secure the application.</li>
-</ol>
+##### Now to get your Database to work:
+
+Do not forget to edit the persistence.xml by writing the correct username and password, and adding the correct link name for the EntityManagerFactory.
