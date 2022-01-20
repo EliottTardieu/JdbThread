@@ -33,4 +33,5 @@ You can also decide not to create the tables before running the program, you can
 
 ##### Now to get your Database to work:
 
+Make sure to set your dialect to "org.hibernate.dialect.MySQL55Dialect".   
 Do not forget to edit the persistence.xml by writing the correct username and password, and adding the correct link name for the EntityManagerFactory.
