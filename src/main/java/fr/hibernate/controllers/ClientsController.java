@@ -55,7 +55,7 @@ public class ClientsController extends Controller<Client> {
     }
 
     public void displayAll(EntityManager em) {
-        view.displayAllClients(em);
+        view.displayAll(em);
     }
 
     public List<Client> getAll(EntityManager em) {

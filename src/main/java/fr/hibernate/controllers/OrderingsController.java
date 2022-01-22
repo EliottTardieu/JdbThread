@@ -53,7 +53,7 @@ public class OrderingsController extends Controller<Ordering> {
     }
 
     public void displayAll(EntityManager em) {
-        view.displayAllOrders(em);
+        view.displayAll(em);
     }
 
     public List<Ordering> getAll(EntityManager em) {

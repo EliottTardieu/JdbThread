@@ -46,7 +46,7 @@ public class SuppliersController extends Controller<Supplier> {
     }
 
     public void displayAll(EntityManager em) {
-        view.displayAllSuppliers(em);
+        view.displayAll(em);
     }
 
     public List<Supplier> getAll(EntityManager em) {

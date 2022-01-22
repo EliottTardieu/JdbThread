@@ -48,7 +48,7 @@ public class ProductsController extends Controller<Product> {
     }
 
     public void displayAll(EntityManager em) {
-        view.displayAllProducts(em);
+        view.displayAll(em);
     }
 
     public List<Product> getAll(EntityManager em) {

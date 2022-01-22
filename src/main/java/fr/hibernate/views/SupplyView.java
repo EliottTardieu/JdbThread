@@ -9,20 +9,20 @@ import fr.hibernate.models.Supply;
 import fr.hibernate.utils.Logger;
 
 import javax.persistence.EntityManager;
+import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class SupplyView {
+public class SupplyView implements View {
 
-    public SupplyView() {
-
-    }
+    public SupplyView() {}
 
     /**
      * Affiche la liste de toutes les fournitures
      */
-    public void displayAllSupplies(EntityManager em) {
+    @Override
+    public void displayAll(EntityManager em) {
         String[] columnsSupply = {"Id", "Nom", "Prénom", "Prix"};
         ArrayList<ArrayList<Object>> dataSupply = new ArrayList<>();
 

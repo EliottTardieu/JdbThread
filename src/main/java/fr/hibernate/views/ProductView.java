@@ -10,15 +10,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class ProductView {
+public class ProductView implements View {
 
-    public ProductView() {
-
-    }
+    public ProductView() {}
     /**
      * Affiche la liste de tous les produits
      */
-    public void displayAllProducts(EntityManager em) {
+    @Override
+    public void displayAll(EntityManager em) {
         String[] columnsProducts = {"Id", "Nom", "Catégorie", "Espèce", "Prix Unitaire (HT)", "Stock Disponible"};
         ArrayList<ArrayList<Object>> dataProducts = new ArrayList<>();
         for (Product product : App.getInstance().getProductsController().getAll(em)) {

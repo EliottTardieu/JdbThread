@@ -5,22 +5,20 @@ import fr.hibernate.App;
 import fr.hibernate.models.Client;
 import fr.hibernate.models.FullAddress;
 import fr.hibernate.utils.Logger;
-
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class ClientView {
+public class ClientView implements View {
 
-    public ClientView() {
-
-    }
+    public ClientView() {}
 
     /**
      * Affiche la liste de tous les clients
      */
-    public void displayAllClients(EntityManager em) {
+    @Override
+    public void displayAll(EntityManager em) {
         String[] columnsClient = {"Id", "Nom", "Prénom", "Réduction", "Adresse", "Ville"};
         ArrayList<ArrayList<Object>> dataClient = new ArrayList<>();
         for (Client client : App.getInstance().getClientsController().getAll(em)) {

@@ -12,16 +12,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class SupplierView {
+public class SupplierView implements View {
 
-    public SupplierView() {
-
-    }
+    public SupplierView() {}
 
     /**
      * Affiche la liste de tous les fournisseurs
      */
-    public void displayAllSuppliers(EntityManager em) {
+    @Override
+    public void displayAll(EntityManager em) {
         String[] columnsSupplier = {"Id", "Nom", "Prénom", "Adresse", "Ville"};
         ArrayList<ArrayList<Object>> dataSupplier = new ArrayList<>();
 

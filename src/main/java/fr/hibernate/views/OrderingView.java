@@ -7,16 +7,15 @@ import fr.hibernate.utils.Logger;
 import javax.persistence.EntityManager;
 import java.util.*;
 
-public class OrderingView {
+public class OrderingView implements View {
 
-    public OrderingView() {
-
-    }
+    public OrderingView() {}
 
     /**
      * Affiche la liste de toutes les commandes
      */
-    public void displayAllOrders(EntityManager em) {
+    @Override
+    public void displayAll(EntityManager em) {
         String[] columnsOrders = {"Id", "Prix", "Nom Client", "Adresse", "Ville"};
         ArrayList<ArrayList<Object>> dataOrders = new ArrayList<>();
 
